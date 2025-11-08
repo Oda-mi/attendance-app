@@ -11,22 +11,22 @@
     display: inline-block;
     padding: 5px 20px;
     margin-top: 50px;
-    height: 30px;
+    height: 38px;
     border: 1px solid #C8C8C8;
     border-radius: 40px;
     background-color:#C8C8C8;
-    font-size: 15px;
+    font-size: 18px;
     color: #696969;
     font-weight: bold;
 }
 
 .attendance__date {
-    font-size: 28px;
+    font-size: 40px;
     margin-top: 20px;
 }
 
 .attendance__time {
-    font-size: 55px;
+    font-size: 80px;
     font-weight: bold;
     margin: 20px 0;
 }
