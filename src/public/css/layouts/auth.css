@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    background-color:#F5F5F5;
     font-family: 'Inter', sans-serif;
 }
 
@@ -16,6 +17,7 @@ body {
     max-width: 1540px;
     margin: 0 auto;
     padding: 0px 30px;
+    height: 70px;
     box-sizing: border-box;
 }
 
@@ -28,18 +30,18 @@ body {
     align-items: center;
 }
 
-.header__buttons {
+.header__nav .header__buttons {
     display: flex;
     align-items: center;
     gap: 50px;
     flex-shrink: 1;
+    height: 40px;
 }
 
-.button {
+.header__nav .header__buttons .button {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 20px;
     font-size:20px;
     font-weight: bold;
     border: none;
@@ -49,10 +51,11 @@ body {
     text-decoration: none;
 }
 
-.button--logout {
+.header__nav .header__buttons .button--logout {
     margin-top: 10px;
 }
 
-.button--afterwork {
+.header__nav .header__buttons .button--afterwork {
     font-weight: normal;
 }
+
