@@ -1,0 +1,117 @@
+.attendance-detail {
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 900px;
+    box-sizing: border-box;
+}
+
+.attendance-detail__title {
+    margin-top: 50px;
+}
+
+.attendance-detail__title h1 {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    gap: 15px;
+    font-size: 25px;
+}
+
+.attendance-detail__title--line {
+    display: inline-block;
+    width: 8px;
+    height: 30px;
+    background-color: #000;
+}
+
+.attendance-detail__table {
+    margin-top: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #FFFFFF;
+}
+
+.attendance-detail__table table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    background-color: #FFFFFF;
+}
+
+.attendance-detail__table th,
+.attendance-detail__table td {
+    height: 80px;
+    padding: 10px;
+    border-bottom: 3px solid #F5F5F5;
+    text-align: left;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.attendance-detail__table tr:last-child td {
+    border-bottom: none;
+}
+
+.attendance-detail__table th {
+    width: 150px;
+    padding-left: 50px;
+    color: #737373;
+}
+
+.attendance-detail__table td {
+    padding-left: 150px;
+    color: #000;
+}
+
+.attendance-detail__user,
+.attendance-detail__date,
+.attendance-detail__time {
+    display: flex;
+    align-items: center;
+}
+
+.attendance-detail__user {
+    width: 400px;
+}
+
+.attendance-detail__date {
+    width: 400px;
+    gap: 160px;
+}
+
+.attendance-detail__time {
+    width: 320px;
+    gap: 80px;
+}
+
+.user-name,
+.date-year,
+.start_time {
+    margin-left: 28px;
+}
+
+.attendance-detail__time span {
+    white-space: nowrap;
+}
+
+.attendance-detail__comment {
+    margin-left: 28px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.attendance-detail__button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+.attendance-detail__button button {
+    width: 150px;
+    height: 50px;
+    border-radius: 5px;
+    background-color: #000;
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: bold;
+}
