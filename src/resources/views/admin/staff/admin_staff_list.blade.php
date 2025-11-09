@@ -7,14 +7,14 @@
 
 @section('content')
 
-<div class="attendance">
-    <div class="attendance__title">
+<div class="common-table">
+    <div class="common-table__title">
         <h1>
-            <span class="attendance__title--line"></span>
+            <span class="common-table__title--line"></span>
         スタッフ一覧
         </h1>
     </div>
-    <div class="attendance__table">
+    <div class="common-table__table">
         <table>
             <thead>
                 <tr>
@@ -25,43 +25,43 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>テスト太郎</td>
+                    <td class="staff-name">テスト太郎</td>
                     <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>
+                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
                 <tr>
                     <td>テスト太郎２</td>
                     <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>
+                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
                     <td>テスト太郎３</td>
                     <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>
+                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
                 <tr>
                     <td>テスト太郎４</td>
                     <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>
+                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
                 <tr>
                     <td>テスト太郎５</td>
                     <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>
+                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
                 <tr>
                     <td>テスト太郎６</td>
                     <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>
+                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
                 <tr>
                     <td>テスト太郎７</td>
                     <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>
+                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
                 <tr>
                     <td>テスト太郎８</td>
                     <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>
+                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
             </tbody>
         </table>

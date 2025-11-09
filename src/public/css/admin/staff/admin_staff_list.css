@@ -1,15 +1,15 @@
-.attendance {
+.common-table {
     margin: 0 auto;
     padding: 20px;
     max-width: 900px;
     box-sizing: border-box;
 }
 
-.attendance__title {
+.common-table__title {
     margin-top: 50px;
 }
 
-.attendance__title h1 {
+.common-table__title h1 {
     display: flex;
     align-items: center;
     text-align: left;
@@ -17,17 +17,16 @@
     font-size: 25px;
 }
 
-.attendance__title--line {
+.common-table__title--line {
     display: inline-block;
     width: 8px;
     height: 30px;
     background-color: #000;
 }
 
-
-
-.attendance__table table {
+.common-table__table table {
     width: 100%;
+    margin-top: 80px;
     border-collapse: separate;
     border-spacing: 0;
     border: solid 1px #FFFFFF;
@@ -37,7 +36,7 @@
     overflow: hidden;
 }
 
-.attendance__table th {
+.common-table__table th {
     padding: 10px 10px;
     background-color: #FFFFFF;
     border-bottom: 5px solid #F5F5F5;
@@ -46,7 +45,7 @@
     color: #737373;
 }
 
-.attendance__table td {
+.common-table__table td {
     padding: 10px 10px;
     border-bottom: 3px solid #F5F5F5;
     font-size: 15px;
@@ -54,11 +53,11 @@
     font-weight: bold;
 }
 
-.attendance__table tbody tr:last-child td {
+.common-table__table tbody tr:last-child td {
     border-bottom: none;
 }
 
-.attendance .attendance__detail-btn {
+.common-table .common-table__detail-btn {
     all:unset;
     padding: 5px 10px;
     font-size: 15px;
@@ -67,7 +66,7 @@
     cursor: pointer;
 }
 
-.attendance .attendance__detail-btn:hover {
+.common-table .common-table__detail-btn:hover {
     color: #737373;
     text-decoration: underline;
 }
