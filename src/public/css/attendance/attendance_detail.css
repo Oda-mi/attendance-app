@@ -65,7 +65,7 @@
 
 .attendance-detail__user,
 .attendance-detail__date,
-.attendance-detail__time {
+.attendance-detail__time-inputs {
     display: flex;
     align-items: center;
 }
@@ -79,23 +79,35 @@
     gap: 160px;
 }
 
-.attendance-detail__time {
+.attendance-detail__time-inputs {
     width: 320px;
-    gap: 80px;
+    gap: 50px;
 }
 
 .user-name,
-.date-year,
-.start_time {
+.date-year {
     margin-left: 28px;
 }
 
-.attendance-detail__time span {
+.attendance-detail__time-inputs input {
+    width: 100px;
+    height: 30px;
+    border: 1px solid #E1E1E1;
+    border-radius: 3px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.attendance-detail__time-inputs span {
     white-space: nowrap;
 }
 
-.attendance-detail__comment {
-    margin-left: 28px;
+.attendance-detail__textarea {
+    width: 320px;
+    height: 80px;
+    border: 1px solid #E1E1E1;
+    border-radius: 3px;
     font-size: 14px;
     font-weight: bold;
 }
