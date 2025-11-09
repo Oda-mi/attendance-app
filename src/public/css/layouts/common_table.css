@@ -72,15 +72,17 @@
     margin-right: 10px;
 }
 
+.common-table__table {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #FFFFFF;
+}
+
 .common-table__table table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border: solid 1px #FFFFFF;
-    border-radius: 10px;
+    border-collapse: collapse;
     text-align: center;
     background-color: #FFFFFF;
-    overflow: hidden;
 }
 
 .common-table__table th {

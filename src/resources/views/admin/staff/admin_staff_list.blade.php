@@ -25,7 +25,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="staff-name">テスト太郎</td>
+                    <td>テスト太郎</td>
                     <td>testtaro@email.com</td>
                     <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
                 </tr>

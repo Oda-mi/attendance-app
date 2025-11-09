@@ -125,9 +125,9 @@
                 </tr>
             </tbody>
         </table>
-        <div class="attendance__button">
-            <button>CSV出力</button>
-        </div>
+    </div>
+    <div class="attendance__button">
+        <button>CSV出力</button>
     </div>
 </div>
 
