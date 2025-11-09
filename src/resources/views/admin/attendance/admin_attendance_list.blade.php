@@ -1,8 +1,9 @@
-@extends('layouts.auth')
+@extends('layouts.admin')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/attendance/list.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin/attendance/admin_attendance_list.css') }}">
 @endsection
+
 
 @section('content')
 
@@ -10,7 +11,7 @@
     <div class="attendance__title">
         <h1>
             <span class="attendance__title--line"></span>
-        勤怠一覧
+        2025年11月1日の勤怠
         </h1>
     </div>
     <div class="attendance__nav">
@@ -25,14 +26,14 @@
                 144 150 160 25 59 -12 138 -76 165 -40 17 -51 17 -89 0z"/>
                 </g>
             </svg>
-            前月
+            前日
         </button>
         <span>
             <img src="/images/calendar.svg" class="calendar-icon">
-            2025/11
+            2025/11/01
         </span>
         <button>
-            翌月
+            翌日
             <svg class="arrow-icon arrow-icon-right" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 161 120" preserveAspectRatio="xMidYMid meet">
                 <g transform="translate(0,120) scale(0.1,-0.1)" stroke="none">
@@ -49,7 +50,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>日付</th>
+                    <th>名前</th>
                     <th>出勤</th>
                     <th>退勤</th>
                     <th>休憩</th>
@@ -59,7 +60,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>06/01(木)</td>
+                    <td>テスト太郎</td>
                     <td>09:00</td>
                     <td>18:00</td>
                     <td>1:00</td>
@@ -67,14 +68,14 @@
                     <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>
                 </tr>
                 <tr>
-                    <td>06/02(金)</td>
+                    <td>テスト太郎２</td>
                     <td>09:00</td>
                     <td>18:00</td>
                     <td>1:00</td>
                     <td>8:00</td>
                     <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>                </tr>
                 <tr>
-                    <td>06/03(土)</td>
+                    <td>テスト太郎３</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -82,7 +83,7 @@
                     <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>
                 </tr>
                 <tr>
-                    <td>06/04(日)</td>
+                    <td>テスト太郎４</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -90,7 +91,7 @@
                     <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>
                 </tr>
                 <tr>
-                    <td>06/05(月)</td>
+                    <td>テスト太郎５</td>
                     <td>09:00</td>
                     <td>18:00</td>
                     <td>1:00</td>
@@ -98,7 +99,7 @@
                     <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>
                 </tr>
                 <tr>
-                    <td>06/06(火)</td>
+                    <td>テスト太郎６</td>
                     <td>09:00</td>
                     <td>18:00</td>
                     <td>1:00</td>
@@ -106,7 +107,7 @@
                     <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>
                 </tr>
                 <tr>
-                    <td>06/07(水)</td>
+                    <td>テスト太郎７</td>
                     <td>09:00</td>
                     <td>18:00</td>
                     <td>1:00</td>
@@ -114,7 +115,7 @@
                     <td><a href="/attendance/detail/{id}" class="attendance__detail-btn">詳細</a></td>
                 </tr>
                 <tr>
-                    <td>06/08(木)</td>
+                    <td>テスト太郎８</td>
                     <td>09:00</td>
                     <td>18:00</td>
                     <td>1:00</td>
