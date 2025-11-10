@@ -25,7 +25,7 @@
                     <li><a href="{{ route('attendance.list') }}" class="button">勤怠一覧</a></li>
                     <li><a href="{{ route('request') }}" class="button">申請</a></li>
                     <li>
-                        <form action="" method="post">
+                        <form action="{{ route('logout') }}" method="post">
                         @csrf
                         <button type="submit" class="button button--logout">ログアウト</button>
                         </form>

@@ -23,7 +23,7 @@
                 <li><a href="{{ route('admin.staff.list') }}" class="button">スタッフ一覧</a></li>
                 <li><a href="{{ route('request') }}" class="button">申請一覧</a></li>
                 <li>
-                    <form action="" method="post">
+                    <form action="{{ route('logout') }}" method="post">
                     @csrf
                     <button type="submit" class="button">ログアウト</button>
                     </form>
