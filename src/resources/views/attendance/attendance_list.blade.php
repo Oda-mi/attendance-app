@@ -72,7 +72,8 @@
                     <td>18:00</td>
                     <td>1:00</td>
                     <td>8:00</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>                </tr>
+                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
+                </tr>
                 <tr>
                     <td>06/03(土)</td>
                     <td></td>

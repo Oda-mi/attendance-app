@@ -19,9 +19,9 @@
         </div>
         <div class="header__nav">
             <ul class="header__buttons">
-                <li><a href="" class="button">勤怠一覧</a></li>
-                <li><a href="" class="button">スタッフ一覧</a></li>
-                <li><a href="" class="button">申請一覧</a></li>
+                <li><a href="{{ route('admin.attendance.list') }}" class="button">勤怠一覧</a></li>
+                <li><a href="{{ route('admin.staff.list') }}" class="button">スタッフ一覧</a></li>
+                <li><a href="{{ route('request') }}" class="button">申請一覧</a></li>
                 <li>
                     <form action="" method="post">
                     @csrf
