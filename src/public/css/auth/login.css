@@ -47,6 +47,7 @@
     border-radius: 3px;
     border-width: 1px;
     font-size: 20px;
+    font-family: inherit;
     padding-left: 10px;
     box-sizing: border-box;
 }
@@ -75,6 +76,7 @@
     border-radius: 3px;
     background: #000000;
     color: #fff;
+    font-family: inherit;
     box-sizing: border-box;
 }
 

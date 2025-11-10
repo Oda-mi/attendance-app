@@ -51,11 +51,12 @@
     transform: rotate(180deg);
 }
 
-.common-table .common-table__nav button {
+.common-table__nav button {
     all: unset;
     padding: 8px 12px;
     color: #737373;
     font-weight: bold;
+    font-family: inherit;
     cursor: pointer;
 }
 
@@ -85,28 +86,28 @@
     background-color: #FFFFFF;
 }
 
-.common-table__table th {
+.common-table__table th,
+.common-table__table td  {
     padding: 10px 10px;
     background-color: #FFFFFF;
-    border-bottom: 5px solid #F5F5F5;
     font-size: 15px;
     font-weight: bold;
     color: #737373;
 }
 
+.common-table__table th{
+    border-bottom: 5px solid #F5F5F5;
+
+}
 .common-table__table td {
-    padding: 10px 10px;
     border-bottom: 3px solid #F5F5F5;
-    font-size: 15px;
-    color: #737373;
-    font-weight: bold;
 }
 
 .common-table__table tbody tr:last-child td {
     border-bottom: none;
 }
 
-.common-table .common-table__detail-btn {
+.common-table__detail-btn {
     all:unset;
     padding: 5px 10px;
     font-size: 15px;
@@ -115,7 +116,7 @@
     cursor: pointer;
 }
 
-.common-table .common-table__detail-btn:hover {
+.common-table__detail-btn:hover {
     color: #737373;
     text-decoration: underline;
 }
