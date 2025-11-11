@@ -25,6 +25,7 @@
                 <li>
                     <form action="{{ route('logout') }}" method="post">
                     @csrf
+                    <input type="hidden" name="redirect_to" value="{{ auth()->user()->is_admin ? '/admin/login' : '/login' }}">
                     <button type="submit" class="button">ログアウト</button>
                     </form>
                 </li>
