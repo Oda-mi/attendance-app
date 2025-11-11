@@ -9,8 +9,9 @@
 <div class="auth">
     <div class="auth__content">
         <h1 class="auth__heading">管理者ログイン</h1>
-        <form action="{{ route('login') }}" method="post" class="auth__form" novalidate>
+        <form action="{{ route('admin.login') }}" method="post" class="auth__form" novalidate>
         @csrf
+        <input type="hidden" name="is_admin_login" value="1">
         <div class="auth__form-group">
             <label for="email" class="auth__form-label">メールアドレス</label>
             <input type="email" name="email" id="email" value="{{ old('email') }}" class="auth__form-input">
