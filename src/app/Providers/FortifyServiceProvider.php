@@ -19,6 +19,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\LogoutResponse;
+use Laravel\Fortify\Contracts\LoginResponse;
+use Illuminate\Support\Facades\Auth;
 
 
 class FortifyServiceProvider extends ServiceProvider
@@ -30,10 +32,11 @@ class FortifyServiceProvider extends ServiceProvider
     {
         $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
 
-        public function toResponse($request)
-        {
-            return redirect('/login');
-        }
+            public function toResponse($request)
+            {
+                $redirectTo = $request->input('redirect_to', '/login');
+                    return redirect($redirectTo);
+            }
         });
     }
 
@@ -49,19 +52,54 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         Fortify::loginView(function () {
+
+            $path = request()->path();
+
+            if ($path === 'admin/login') {
+                return view('admin.auth.admin_login');
+            }
+
             return view('auth.login');
         });
 
         Fortify::authenticateUsing(function (Request $request) {
             $user = User::where('email', $request->email)->first();
 
-            if ($user && Hash::check($request->password, $user->password)) {
-                return $user;
+            if (! $user || ! Hash::check($request->password, $user->password)) {
+                throw ValidationException::withMessages([
+                    'email' => ['ログイン情報が登録されていません'],
+                ]);
             }
 
-            throw ValidationException::withMessages([
-                'email' => ['ログイン情報が登録されていません'],
-            ]);
+            $isAdminLogin = $request->input('is_admin_login', 0);
+
+            if ($isAdminLogin && ! $user->is_admin) {
+                throw ValidationException::withMessages([
+                    'email' => ['このアカウントではログインできません'],
+                ]);
+            }
+
+            if (! $isAdminLogin && $user->is_admin) {
+                throw ValidationException::withMessages([
+                    'email' => ['このアカウントではログインできません'],
+                ]);
+            }
+
+            return $user;
+        });
+
+
+        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
+            public function toResponse($request)
+            {
+                $user = Auth::user();
+
+                if ($user->is_admin) {
+                    return redirect()->route('admin.attendance.list');;
+                }
+
+                return redirect('/attendance/before_work');
+            }
         });
 
         RateLimiter::for('login', function (Request $request) {
