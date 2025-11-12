@@ -98,7 +98,7 @@ class FortifyServiceProvider extends ServiceProvider
                     return redirect()->route('admin.attendance.list');;
                 }
 
-                return redirect('/attendance/before_work');
+                return redirect()->route('attendance.index');
             }
         });
 
