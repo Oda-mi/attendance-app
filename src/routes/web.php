@@ -41,6 +41,10 @@ Route::view('/attendance/after-work', 'attendance.states.attendance_after_work')
 
 Route::post('/attendance/start', [AttendanceController::class, 'startWork'])->name('attendance.start');
 Route::post('/attendance/start_break', [AttendanceController::class, 'startBreak'])->name('attendance.start_break');
+Route::post('/attendance/end_break', [AttendanceController::class, 'endBreak'])->name('attendance.end_break');
+Route::post('/attendance/end', [AttendanceController::class, 'endWork'])->name('attendance.end');
+
+
 
 
 
