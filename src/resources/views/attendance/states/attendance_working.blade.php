@@ -15,11 +15,21 @@
         {{ now()->format('H:i') }}
     </div>
 
-    <form action="" method="post" class="attendance__buttons">
+    <div class="attendance__buttons">
+        <form action="{{ route('attendance.end') }}" method="post">
         @csrf
-        <button type="submit" class="attendance__button attendance__button--clockout">退勤</button>
-        <button type="submit" class="attendance__button attendance__button--breakin">休憩入</button>
-    </form>
+            <button type="submit" class="attendance__button attendance__button--clockout">
+                退勤
+            </button>
+        </form>
+        <form action="{{ route('attendance.start_break') }}" method="post">
+        @csrf
+            <button type="submit" class="attendance__button attendance__button--breakin">
+                休憩入
+            </button>
+        </form>
+    </div>
+
 </div>
 
 @endsection

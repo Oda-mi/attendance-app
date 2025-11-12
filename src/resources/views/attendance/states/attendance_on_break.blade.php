@@ -15,7 +15,7 @@
         {{ now()->format('H:i') }}
     </div>
 
-    <form action="" method="post">
+    <form action="{{ route('attendance.end_break') }}" method="post">
         @csrf
         <button type="submit" class="attendance__button">休憩戻</button>
     </form>

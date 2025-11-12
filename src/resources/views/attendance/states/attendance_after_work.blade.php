@@ -10,7 +10,7 @@
         <li><a href="" class="button button--afterwork">今月の出勤一覧</a></li>
         <li><a href="" class="button button--afterwork">申請一覧</a></li>
         <li>
-            <form action="" method="post">
+            <form action="{{ route('logout') }}" method="post">
             @csrf
             <button type="submit" class="button button--logout">ログアウト</button>
             </form>
