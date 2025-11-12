@@ -24,6 +24,11 @@ class User extends Authenticatable
         'is_admin',
     ];
 
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
