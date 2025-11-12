@@ -21,7 +21,7 @@
                 @yield('header-nav')
             @else
                 <ul class="header__buttons">
-                    <li><a href="{{ route('attendance.states') }}" class="button">勤怠</a></li>
+                    <li><a href="{{ route('attendance.index') }}" class="button">勤怠</a></li>
                     <li><a href="{{ route('attendance.list') }}" class="button">勤怠一覧</a></li>
                     <li><a href="{{ route('request') }}" class="button">申請</a></li>
                     <li>
