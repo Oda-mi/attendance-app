@@ -15,7 +15,7 @@
         {{ now()->format('H:i') }}
     </div>
 
-    <form action="" method="post">
+    <form action="{{ route('attendance.start') }}" method="post">
         @csrf
         <button type="submit" class="attendance__button">出勤</button>
     </form>
