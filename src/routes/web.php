@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+use App\Http\Controllers\AttendanceController;
 
 
 /*
@@ -31,25 +32,19 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    Route::get('/attendance', function () {
-    return view('attendance.attendance_index');
-})->name('attendance');
+Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
 
-Route::get('/attendance/before_work', function () {
-    return view('attendance.states.attendance_before_work');
-})->name('attendance.states');;
+Route::view('/attendance/before-work', 'attendance.states.attendance_before_work')->name('attendance.before_work');
+Route::view('/attendance/working', 'attendance.states.attendance_working')->name('attendance.working');
+Route::view('/attendance/on-break', 'attendance.states.attendance_on_break')->name('attendance.on_break');
+Route::view('/attendance/after-work', 'attendance.states.attendance_after_work')->name('attendance.after_work');
 
-Route::get('/attendance/on_break', function () {
-    return view('attendance.states.attendance_on_break');
-});
+Route::post('/attendance/start', [AttendanceController::class, 'startWork'])->name('attendance.start');
+Route::post('/attendance/start_break', [AttendanceController::class, 'startBreak'])->name('attendance.start_break');
 
-Route::get('/attendance/working', function () {
-    return view('attendance.states.attendance_working');
-});
 
-Route::get('/attendance/after_work', function () {
-    return view('attendance.states.attendance_after_work');
-});
+
+
 });
 
 
