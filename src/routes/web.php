@@ -26,9 +26,6 @@ Route::get('/verify-email', function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/attendance/list', function () {
-        return view('attendance.attendance_list');
-    })->name('attendance.list');
 
 
 
@@ -43,6 +40,9 @@ Route::post('/attendance/start', [AttendanceController::class, 'startWork'])->na
 Route::post('/attendance/start_break', [AttendanceController::class, 'startBreak'])->name('attendance.start_break');
 Route::post('/attendance/end_break', [AttendanceController::class, 'endBreak'])->name('attendance.end_break');
 Route::post('/attendance/end', [AttendanceController::class, 'endWork'])->name('attendance.end');
+
+Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
+
 
 
 
