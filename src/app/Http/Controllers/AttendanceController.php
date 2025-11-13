@@ -158,4 +158,41 @@ class AttendanceController extends Controller
 
         return redirect()->route('attendance.after_work');
     }
+
+
+
+    public function list(Request $request)
+    {
+        $user = auth()->user();
+
+        if ($user->is_admin) {
+            abort(403,'このページにはアクセスできません。');
+        }
+
+        $today = Carbon::today();
+
+        $year = $request->input('year', $today->year);
+        $month = $request->input('month', $today->month);
+
+        $attendances = Attendance::with('breaks')
+                                ->where('user_id', $user->id)
+                                ->whereYear('work_date', $year)
+                                ->whereMonth('work_date', $month)
+                                ->orderBy('work_date','asc')
+                                ->get();
+
+        $displayMonth = Carbon::createFromDate($year, $month, 1)->format('Y/m');
+
+        $prevMonth = Carbon::createFromDate($year, $month, 1)->subMonth();
+        $nextMonth = Carbon::createFromDate($year, $month, 1)->addMonth();
+
+        return view('attendance.attendance_list',compact(
+            'attendances',
+            'displayMonth',
+            'prevMonth',
+            'nextMonth'
+        ));
+
+
+    }
 }
