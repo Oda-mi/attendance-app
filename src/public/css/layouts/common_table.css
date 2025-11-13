@@ -36,7 +36,7 @@
     background-color: #FFFFFF;
 }
 
-.common-table__nav button .arrow-icon {
+.common-table__nav a .arrow-icon {
     width: 16px;
     height: 16px;
     fill: #737373;
@@ -51,7 +51,7 @@
     transform: rotate(180deg);
 }
 
-.common-table__nav button {
+.common-table__nav a {
     all: unset;
     padding: 8px 12px;
     color: #737373;
