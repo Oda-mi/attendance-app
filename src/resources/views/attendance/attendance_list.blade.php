@@ -6,6 +6,10 @@
 
 @section('content')
 
+@php
+use Carbon\Carbon;
+@endphp
+
 <div class="common-table">
     <div class="common-table__title">
         <h1>
@@ -14,7 +18,7 @@
         </h1>
     </div>
     <div class="common-table__nav">
-        <button>
+        <a href="{{ route('attendance.list', ['year' => $prevMonth->year, 'month' => $prevMonth->month]) }}">
             <svg class="arrow-icon common-table__arrow-left" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 161 120" preserveAspectRatio="xMidYMid meet">
                 <g transform="translate(0,120) scale(0.1,-0.1)" stroke="none">
@@ -26,12 +30,12 @@
                 </g>
             </svg>
             前月
-        </button>
+        </a>
         <span>
             <img src="/images/calendar.svg" class="calendar-icon">
-            2025/11
+            {{ $displayMonth }}
         </span>
-        <button>
+        <a href="{{ route('attendance.list', ['year' => $nextMonth->year, 'month' => $nextMonth->month]) }}">
             翌月
             <svg class="arrow-icon common-table__arrow-right" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 161 120" preserveAspectRatio="xMidYMid meet">
@@ -43,7 +47,7 @@
                 144 150 160 25 59 -12 138 -76 165 -40 17 -51 17 -89 0z"/>
                 </g>
             </svg>
-        </button>
+        </a>
     </div>
     <div class="common-table__table">
         <table>
@@ -58,70 +62,16 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach($attendances as $attendance)
                 <tr>
-                    <td>06/01(木)</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
+                    <td>{{ Carbon::parse($attendance->work_date)->locale('ja')->translatedFormat('m/d(D)') }}</td>
+                    <td>{{ $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '' }}</td>
+                    <td>{{ $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '' }}</td>
+                    <td>{{ $attendance->breakTotal ? gmdate('H:i', $attendance->breakTotal) : '' }}</td>
+                    <td>{{ $attendance->workTotal ? gmdate('H:i', $attendance->workTotal) : '' }}</td>
                     <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
-                <tr>
-                    <td>06/02(金)</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/03(土)</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/04(日)</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/05(月)</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/06(火)</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/07(水)</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/08(木)</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
