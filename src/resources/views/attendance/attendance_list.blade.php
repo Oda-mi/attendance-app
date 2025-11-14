@@ -62,7 +62,7 @@ use Carbon\Carbon;
                 </tr>
             </thead>
             <tbody>
-                @foreach($attendances as $attendance)
+                @foreach($attendanceDays as $attendance)
                 <tr>
                     <td>{{ Carbon::parse($attendance->work_date)->locale('ja')->translatedFormat('m/d(D)') }}</td>
                     <td>{{ $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '' }}</td>
