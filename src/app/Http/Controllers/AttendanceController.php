@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Carbon\Carbon;
 use App\Models\Attendance;
+use Carbon\CarbonPeriod;
 
 class AttendanceController extends Controller
 {
@@ -186,13 +187,32 @@ class AttendanceController extends Controller
         $prevMonth = Carbon::createFromDate($year, $month, 1)->subMonth();
         $nextMonth = Carbon::createFromDate($year, $month, 1)->addMonth();
 
+        $start = Carbon::createFromDate($year, $month, 1);
+        $end   = (clone $start)->endOfMonth();
+
+        $period = CarbonPeriod::create($start, $end);
+
+        $attendanceDays = collect($period)->map(function ($date) use ($attendances)
+        {
+            $attendance = $attendances->first(function ($workDate) use ($date) {
+                return Carbon::parse($workDate->work_date)->isSameDay($date);
+            });
+
+            return $attendance ?? (object)[
+                'id'         => null,
+                'work_date'  => $date->format('Y-m-d'),
+                'start_time' => null,
+                'end_time'   => null,
+                'breakTotal' => 0,
+                'workTotal'  => 0,
+            ];
+        });
+
         return view('attendance.attendance_list',compact(
-            'attendances',
+            'attendanceDays',
             'displayMonth',
             'prevMonth',
             'nextMonth'
         ));
-
-
     }
 }
