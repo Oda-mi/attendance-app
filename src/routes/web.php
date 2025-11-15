@@ -26,27 +26,20 @@ Route::get('/verify-email', function () {
 
 Route::middleware(['auth'])->group(function () {
 
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
 
+    Route::view('/attendance/before-work', 'attendance.states.attendance_before_work')->name('attendance.before_work');
+    Route::view('/attendance/working', 'attendance.states.attendance_working')->name('attendance.working');
+    Route::view('/attendance/on-break', 'attendance.states.attendance_on_break')->name('attendance.on_break');
+    Route::view('/attendance/after-work', 'attendance.states.attendance_after_work')->name('attendance.after_work');
 
+    Route::post('/attendance/start', [AttendanceController::class, 'startWork'])->name('attendance.start');
+    Route::post('/attendance/start_break', [AttendanceController::class, 'startBreak'])->name('attendance.start_break');
+    Route::post('/attendance/end_break', [AttendanceController::class, 'endBreak'])->name('attendance.end_break');
+    Route::post('/attendance/end', [AttendanceController::class, 'endWork'])->name('attendance.end');
 
-Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
-
-Route::view('/attendance/before-work', 'attendance.states.attendance_before_work')->name('attendance.before_work');
-Route::view('/attendance/working', 'attendance.states.attendance_working')->name('attendance.working');
-Route::view('/attendance/on-break', 'attendance.states.attendance_on_break')->name('attendance.on_break');
-Route::view('/attendance/after-work', 'attendance.states.attendance_after_work')->name('attendance.after_work');
-
-Route::post('/attendance/start', [AttendanceController::class, 'startWork'])->name('attendance.start');
-Route::post('/attendance/start_break', [AttendanceController::class, 'startBreak'])->name('attendance.start_break');
-Route::post('/attendance/end_break', [AttendanceController::class, 'endBreak'])->name('attendance.end_break');
-Route::post('/attendance/end', [AttendanceController::class, 'endWork'])->name('attendance.end');
-
-Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
-
-
-
-
-
+    Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
+    Route::get('/attendance/detail/{id?}', [AttendanceController::class, 'detail'])->name('attendance.detail');
 
 
 });
@@ -57,9 +50,6 @@ Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('att
 
 
 
-Route::get('/attendance/detail/{id}', function ($id) {
-    return view('attendance.attendance_detail', compact('id'));
-})->name('attendance.detail');
 
 Route::get('/stamp_correction_request/list', function () {
     return view('stamp_correction_request.request_list');
@@ -76,8 +66,7 @@ Route::get('/admin/login', function () {
     return view('admin.auth.admin_login');
 })->name('admin.login');
 
-Route::post('/admin/login', [AuthenticatedSessionController::class, 'store'])
-    ->name('admin.login');
+Route::post('/admin/login', [AuthenticatedSessionController::class, 'store'])->name('admin.login');
 
 
 
@@ -96,12 +85,12 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::prefix('admin')->group(function () {
-    
+
 
 
     Route::get('/attendance/{id}', function ($id) {
         return view('attendance.attendance_detail', compact('id'));
-    })->name('attendance.detail');
+    });
 
     Route::get('/attendance/staff/{id}', function ($id) {
         return view('admin.attendance.admin_attendance_staff', compact('id'));
