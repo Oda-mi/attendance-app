@@ -215,4 +215,41 @@ class AttendanceController extends Controller
             'nextMonth'
         ));
     }
+
+    public function detail(Request $request, $id = null)
+
+    {
+        $user = auth()->user();
+
+        if ($user->is_admin) {
+            abort(403,'このページにはアクセスできません。');
+        }
+
+        if ($id) {
+            $attendance = Attendance::with('breaks')
+                                    ->where('user_id', $user->id)
+                                    ->findOrFail($id);
+
+            $breaks = $attendance->breaks;
+        } else {
+
+            $work_date = $request->input('date') ?? now()->format('Y-m-d');
+
+            $attendance = new Attendance([
+                'id' => null,
+                'user_id' => $user->id,
+                'work_date' => $work_date,
+                'start_time' => null,
+                'end_time' => null,
+            ]);
+
+            $breaks = collect();
+        }
+
+        return view('attendance.attendance_detail',compact(
+            'user',
+            'attendance',
+            'breaks'
+        ));
+    }
 }
