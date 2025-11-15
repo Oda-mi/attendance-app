@@ -69,7 +69,7 @@ use Carbon\Carbon;
                     <td>{{ $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '' }}</td>
                     <td>{{ $attendance->breakTotal ? gmdate('H:i', $attendance->breakTotal) : '' }}</td>
                     <td>{{ $attendance->workTotal ? gmdate('H:i', $attendance->workTotal) : '' }}</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
+                    <td><a href="{{ route('attendance.detail', ['id' => $attendance->id, 'date' => $attendance->work_date]) }}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
                 @endforeach
             </tbody>
