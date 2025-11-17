@@ -131,3 +131,11 @@
     font-family: inherit;
 }
 
+.attendance-form__error {
+    margin-top: 5px;
+    height: 20px;
+    color: #ff0000;
+    font-size: 15px;
+    text-align: left;
+}
+

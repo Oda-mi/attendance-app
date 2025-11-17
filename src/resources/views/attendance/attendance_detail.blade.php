@@ -18,7 +18,7 @@ use Carbon\Carbon;
         </h1>
     </div>
 
-    <form action="" method="post">
+    <form action="{{ route('attendance.update_request', $attendance->id) }}" method="post">
         @csrf
         <div class="attendance-detail__table">
             <table>
@@ -43,9 +43,14 @@ use Carbon\Carbon;
                     <th>出勤・退勤</th>
                     <td colspan="3">
                         <div class="attendance-detail__time-inputs">
-                            <input type="text" name="start_time" value="{{ $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '' }}">
+                            <input type="text" name="start_time" value="{{ old('start_time', $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '') }}">
                             <span>～</span>
-                            <input type="text" name="end_time" value="{{ $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '' }}">
+                            <input type="text" name="end_time" value="{{ old('end_time',$attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '') }}">
+                        </div>
+                        <div class="attendance-form__error">
+                        @error('start_time')
+                            {{ $message }}
+                        @enderror
                         </div>
                     </td>
                 </tr>
@@ -54,10 +59,19 @@ use Carbon\Carbon;
                     <th>{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</th>
                     <td colspan="3">
                         <div class="attendance-detail__time-inputs">
-                            <input type="text" name="break_start[{{ $index }}]" value="{{ $break->start_time ? Carbon::parse($break->start_time)->format('H:i') : '' }}">
+                            <input type="text" name="break_start[{{ $index }}]" value="{{  old('break_start.'.$index,$break->start_time ? Carbon::parse($break->start_time)->format('H:i') : '') }}">
                             <span>～</span>
-                            <input type="text" name="break_end[{{ $index }}]" value="{{ $break->end_time ? Carbon::parse($break->end_time)->format('H:i') : '' }}">
+                            <input type="text" name="break_end[{{ $index }}]" value="{{  old('break_end.'.$index,$break->end_time ? Carbon::parse($break->end_time)->format('H:i') : '') }}">
                         </div>
+                        <div class="attendance-form__error">
+                            @error("break_start.$index")
+                                {{ $message }}
+                            @enderror
+                            @error("break_end.$index")
+                                {{ $message }}
+                            @enderror
+                        </div>
+
                     </td>
                 </tr>
                 @endforeach
@@ -69,12 +83,25 @@ use Carbon\Carbon;
                             <span>～</span>
                             <input type="text" name="break_end[{{ $breaks->count() }}]" value="">
                         </div>
+                        <div class="attendance-form__error">
+                            @error("break_start.$index")
+                                {{ $message }}
+                            @enderror
+                            @error("break_end.$index")
+                                {{ $message }}
+                            @enderror
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <th>備考</th>
                     <td colspan="3">
-                        <textarea name="comment" id="" class="attendance-detail__textarea"></textarea>
+                        <textarea name="note" id="" class="attendance-detail__textarea">{{ old('note', $attendance->note) }}</textarea>
+                        <div class="attendance-form__error">
+                        @error('note')
+                            {{ $message }}
+                        @enderror
+                        </div>
                     </td>
                 </tr>
             </table>
