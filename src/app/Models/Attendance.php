@@ -39,6 +39,11 @@ class Attendance extends Model
         return $this->hasMany(AttendanceBreak::class);
     }
 
+    public function attendanceUpdateRequests()
+    {
+        return $this->hasMany(AttendanceUpdateRequest::class);
+    }
+
 
     public function getBreakTotalAttribute()
     {
