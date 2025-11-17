@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\AttendanceUpdateRequestForm;
+
+use App\Models\Attendance;
+use App\Models\AttendanceUpdateRequest;
+
+
 
 use Carbon\Carbon;
-use App\Models\Attendance;
 use Carbon\CarbonPeriod;
 
 class AttendanceController extends Controller
@@ -216,6 +221,8 @@ class AttendanceController extends Controller
         ));
     }
 
+
+
     public function detail(Request $request, $id = null)
 
     {
@@ -252,4 +259,49 @@ class AttendanceController extends Controller
             'breaks'
         ));
     }
+
+
+
+    public function storeUpdateRequest(AttendanceUpdateRequestForm $request, $attendanceId)
+    {
+        $attendance = Attendance::firstOrCreate(
+            ['user_id' => $user->id, 'work_date' => $work_date],
+            ['start_time' => null, 'end_time' => null]
+        );
+
+        $user = auth()->user();
+        $validated = $request->validated();
+
+        $validated['user_id'] = $user->id;
+        $validated['attendance_id'] = $attendance ? $attendance->id : null;
+
+        $validated['status'] = 'pending';
+
+        $breakStarts = $request->input('break_start', []);
+        $breakEnds   = $request->input('break_end', []);
+        $breaks = [];
+
+        foreach ($breakStarts as $index => $start) {
+            $end = $breakEnds[$index] ?? null;
+            if ($start || $end) {
+                $breaks[] = [
+                    'start_time' => $start,
+                    'end_time' => $end,
+                ];
+            }
+        }
+
+        AttendanceUpdateRequest::create([
+            'user_id' => $validated['user_id'],
+            'attendance_id' => $validated['attendance_id'],
+            'start_time' => $validated['start_time'],
+            'end_time' => $validated['end_time'],
+            'breaks' => $breaks,
+            'note' => $validated['note'],
+            'status' => $validated['status'],
+        ]);
+
+        return redirect()->route('attendance.detail', ['id' => $attendanceId]);
+    }
+
 }
