@@ -67,7 +67,13 @@ use Carbon\Carbon;
                     <td>{{ Carbon::parse($attendance->work_date)->locale('ja')->translatedFormat('m/d(D)') }}</td>
                     <td>{{ $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '' }}</td>
                     <td>{{ $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '' }}</td>
-                    <td>{{ $attendance->breakTotal ? gmdate('H:i', $attendance->breakTotal) : '' }}</td>
+<td>
+    @if($attendance->start_time && $attendance->end_time)
+        {{ gmdate('H:i', $attendance->breakTotal ?? 0) }}
+    @else
+    
+    @endif
+</td>
                     <td>{{ $attendance->workTotal ? gmdate('H:i', $attendance->workTotal) : '' }}</td>
                     <td><a href="{{ route('attendance.detail', ['id' => $attendance->id, 'date' => $attendance->work_date]) }}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
