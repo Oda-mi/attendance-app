@@ -12,6 +12,7 @@ class AttendanceUpdateRequest extends Model
         protected $fillable = [
             'user_id',
             'attendance_id',
+            'work_date',
             'start_time',
             'end_time',
             'breaks',
