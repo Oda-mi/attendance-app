@@ -18,8 +18,11 @@ use Carbon\Carbon;
         </h1>
     </div>
 
-    <form action="{{ route('attendance.update_request', $attendance->id) }}" method="post">
-        @csrf
+<form action="{{ route('attendance.update_request') }}" method="post">
+            @csrf
+        <input type="hidden" name="attendanceId" value="{{ $attendance->id ?? 0 }}">
+        <input type="hidden" name="work_date" value="{{ $attendance->work_date }}">
+
         <div class="attendance-detail__table">
             <table>
                 <tr>
@@ -48,7 +51,13 @@ use Carbon\Carbon;
                             <input type="text" name="end_time" value="{{ old('end_time',$attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '') }}">
                         </div>
                         <div class="attendance-form__error">
+                        @error('time')
+                            {{ $message }}
+                        @enderror
                         @error('start_time')
+                            {{ $message }}
+                        @enderror
+                        @error('end_time')
                             {{ $message }}
                         @enderror
                         </div>
@@ -71,7 +80,6 @@ use Carbon\Carbon;
                                 {{ $message }}
                             @enderror
                         </div>
-
                     </td>
                 </tr>
                 @endforeach
@@ -84,10 +92,10 @@ use Carbon\Carbon;
                             <input type="text" name="break_end[{{ $breaks->count() }}]" value="">
                         </div>
                         <div class="attendance-form__error">
-                            @error("break_start.$index")
+                            @error("break_start." . $breaks->count())
                                 {{ $message }}
                             @enderror
-                            @error("break_end.$index")
+                            @error("break_end." . $breaks->count())
                                 {{ $message }}
                             @enderror
                         </div>
