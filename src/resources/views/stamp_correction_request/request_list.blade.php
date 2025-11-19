@@ -6,6 +6,9 @@
 
 @section('content')
 
+@php
+use Carbon\Carbon;
+@endphp
 
 <div class="common-table">
     <div class="common-table__title">
@@ -17,12 +20,12 @@
 
     <div class="nav">
         <div class="nav__tabs">
-            <a href="" class="nav__tab">承認待ち</a>
-            <a href="" class="nav__tab">承認済み</a>
+            <a href="#" class="nav__tab active" data-target="pending">承認待ち</a>
+            <a href="#" class="nav__tab" data-target="approved">承認済み</a>
         </div>
     </div>
 
-    <div class="common-table__table">
+    <div id="pending" class="common-table__table tab-content">
         <table>
             <thead>
                 <tr>
@@ -35,46 +38,42 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach($pendingRequests ?? [] as $request)
                 <tr>
                     <td>承認待ち</td>
-                    <td>テスト太郎太郎</td>
-                    <td>2025/11/01</td>
-                    <td>遅延のため</td>
-                    <td>2025/11/02</td>
-                    <td><a href="/stamp_correction_request/detail/{id}" class="common-table__detail-btn">詳細</a></td>
+                    <td>{{ $request->user->name }}</td>
+                    <td>{{ Carbon::parse($request->work_date)->format('Y/m/d') }}</td>
+                    <td>{{ $request->note }}</td>
+                    <td>{{ Carbon::parse($request->created_at)->format('Y/m/d') }}</td>
+                    <td><a href="{{ route('attendance.detail', ['id' => $request->attendance_id]) }}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <div id="approved" class="common-table__table tab-content" style="display:none;">
+        <table>
+            <thead>
                 <tr>
-                    <td>承認待ち</td>
-                    <td>テスト太郎</td>
-                    <td>2025/11/01</td>
-                    <td>遅延のため</td>
-                    <td>2025/11/02</td>
-                    <td><a href="/stamp_correction_request/detail/{id}" class="common-table__detail-btn">詳細</a></td>
+                    <th>状態</th>
+                    <th>名前</th>
+                    <th>対象日時</th>
+                    <th>申請理由</th>
+                    <th>申請日時</th>
+                    <th>詳細</th>
                 </tr>
+            </thead>
+            <tbody>
+                @foreach($approvedRequests ?? [] as $request)
                 <tr>
-                    <td>承認待ち</td>
-                    <td>テスト太郎</td>
-                    <td>2025/11/01</td>
-                    <td>遅延のため</td>
-                    <td>2025/11/02</td>
-                    <td><a href="/stamp_correction_request/detail/{id}" class="common-table__detail-btn">詳細</a></td>
+                    <td>承認済み</td>
+                    <td>{{ $request->user->name }}</td>
+                    <td>{{ Carbon::parse($request->work_date)->format('Y/m/d') }}</td>
+                    <td>{{ $request->note }}</td>
+                    <td>{{ Carbon::parse($request->created_at)->format('Y/m/d') }}</td>
+                    <td><a href="{{ route('attendance.detail', ['id' => $request->attendance_id]) }}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
-                <tr>
-                    <td>承認待ち</td>
-                    <td>テスト太郎</td>
-                    <td>2025/11/01</td>
-                    <td>遅延のため</td>
-                    <td>2025/11/02</td>
-                    <td><a href="/stamp_correction_request/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>承認待ち</td>
-                    <td>テスト太郎</td>
-                    <td>2025/11/01</td>
-                    <td>遅延のため</td>
-                    <td>2025/11/02</td>
-                    <td><a href="/stamp_correction_request/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
@@ -82,6 +81,33 @@
 
 @endsection
 
+@push('scripts')
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabButtons = document.querySelectorAll('.nav__tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(tabButton => {
+            tabButton.addEventListener('click', (clickEvent) => {
+                clickEvent.preventDefault();
+
+                const targetContentId = tabButton.dataset.target;
+
+                // タブのアクティブ切り替え
+                tabButtons.forEach(button => button.classList.remove('active'));
+                tabButton.classList.add('active');
+
+                // コンテンツの表示切り替え
+                tabContents.forEach(content => {
+                    content.style.display = (content.id === targetContentId) ? 'block' : 'none';
+                });
+            });
+        });
+    });
+
+</script>
+
+@endpush
 
 
