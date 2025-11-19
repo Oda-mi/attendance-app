@@ -68,9 +68,17 @@ use Carbon\Carbon;
                     <th>{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</th>
                     <td colspan="3">
                         <div class="attendance-detail__time-inputs">
-                            <input type="text" name="break_start[{{ $index }}]" value="{{  old('break_start.'.$index,$break->start_time ? Carbon::parse($break->start_time)->format('H:i') : '') }}">
+                            <input
+                                type="text"
+                                name="break_start[{{ $index }}]"
+                                value="{{  old('break_start.'.$index,$break->start_time ? Carbon::parse($break->start_time)->format('H:i') : '') }}"
+                            >
                             <span>～</span>
-                            <input type="text" name="break_end[{{ $index }}]" value="{{  old('break_end.'.$index,$break->end_time ? Carbon::parse($break->end_time)->format('H:i') : '') }}">
+                            <input
+                                type="text"
+                                name="break_end[{{ $index }}]"
+                                value="{{  old('break_end.'.$index,$break->end_time ? Carbon::parse($break->end_time)->format('H:i') : '') }}"
+                            >
                         </div>
                         <div class="attendance-form__error">
                             @error("break_start.$index")
@@ -87,9 +95,17 @@ use Carbon\Carbon;
                     <th>休憩{{ $breaks->count() + 1 }}</th>
                     <td colspan="3">
                         <div class="attendance-detail__time-inputs">
-                            <input type="text" name="break_start[{{ $breaks->count() }}]" value="">
+                            <input
+                                type="text"
+                                name="break_start[{{ $breaks->count() }}]"
+                                value="{{ old('break_start.' . $breaks->count()) }}"
+                            >
                             <span>～</span>
-                            <input type="text" name="break_end[{{ $breaks->count() }}]" value="">
+                            <input
+                                type="text"
+                                name="break_end[{{ $breaks->count() }}]"
+                                value="{{ old('break_end.' . $breaks->count()) }}"
+                            >
                         </div>
                         <div class="attendance-form__error">
                             @error("break_start." . $breaks->count())
@@ -104,7 +120,9 @@ use Carbon\Carbon;
                 <tr>
                     <th>備考</th>
                     <td colspan="3">
-                        <textarea name="note" id="" class="attendance-detail__textarea">{{ old('note', $attendance->note) }}</textarea>
+                        <textarea name="note" class="attendance-detail__textarea">
+                            {{ old('note', $attendance->note) }}
+                        </textarea>
                         <div class="attendance-form__error">
                         @error('note')
                             {{ $message }}
