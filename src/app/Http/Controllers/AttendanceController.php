@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\AttendanceUpdateRequestForm;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Attendance;
 use App\Models\AttendanceUpdateRequest;
@@ -273,48 +274,53 @@ class AttendanceController extends Controller
 
         $attendanceId = (int) $request->input('attendanceId', 0);
 
-        if ($attendanceId === 0 ) {
-            $workDate = $request->input('work_date') ?? now()->format('Y-m-d');
-            $attendance = Attendance::firstOrCreate(
-                [
-                    'user_id' => $user->id,
-                    'work_date' => $workDate,
-                ],
-                [
-                    'start_time' => null,
-                    'end_time' => null,
-                ]
-            );
-        } else {
-            $attendance = Attendance::findOrFail($attendanceId);
-            $workDate = $attendance->work_date;
-        }
+        DB::transaction(function() use ($attendanceId, $request, $user, $validated, &$attendance) {
 
-        $breakStarts = $request->input('break_start', []);
-        $breakEnds   = $request->input('break_end', []);
-        $breaks = [];
+            if ($attendanceId === 0 ) {
+                $workDate = $request->input('work_date') ?? now()->format('Y-m-d');
+                $attendance = Attendance::firstOrCreate(
+                    [
+                        'user_id' => $user->id,
+                        'work_date' => $workDate,
+                    ],
+                    [
+                        'start_time' => null,
+                        'end_time' => null,
+                    ]
+                );
+            } else {
+                $attendance = Attendance::findOrFail($attendanceId);
+                if ($attendance->user_id !== $user->id) {
+                    abort(403);
+                }
+                $workDate = $attendance->work_date;
+            }
 
-        foreach ($breakStarts as $index => $start) {
-            $end = $breakEnds[$index] ?? null;
+            $breakStarts = $request->input('break_start', []);
+            $breakEnds = $request->input('break_end', []);
+            $breaks = [];
 
-            if ($start || $end) {
+            foreach ($breakStarts as $index => $start) {
+                $start = trim($start ?? '');
+                $end = trim($breakEnds[$index] ?? '');
+                if ($start === '' && $end === '') continue;
                 $breaks[] = [
-                    'start_time' => $start,
-                    'end_time' => $end,
+                    'start_time' => $start ?: null,
+                    'end_time' => $end ?: null
                 ];
             }
-        }
 
-        AttendanceUpdateRequest::create([
-            'user_id' => $user->id,
-            'attendance_id' => $attendance->id,
-            'work_date' => $workDate,
-            'start_time' => $validated['start_time'],
-            'end_time' => $validated['end_time'],
-            'breaks' => $breaks,
-            'note' => $validated['note'],
-            'status' => $validated['status'],
-        ]);
+            AttendanceUpdateRequest::create([
+                'user_id' => $user->id,
+                'attendance_id' => $attendance->id,
+                'work_date' => $workDate,
+                'start_time' => $validated['start_time'],
+                'end_time' => $validated['end_time'],
+                'breaks' => $breaks,
+                'note' => $validated['note'],
+                'status' => $validated['status'],
+            ]);
+        });
 
         return redirect()->route('attendance.detail', ['id' => $attendance->id]);
 
