@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\StampCorrectionRequestController;
+
 
 
 /*
@@ -42,8 +44,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/attendance/detail/{id?}', [AttendanceController::class, 'detail'])->name('attendance.detail');
 
-Route::post('/attendance/update-request', [AttendanceController::class, 'storeUpdateRequest'])->name('attendance.update_request');
+    Route::post('/attendance/update-request', [AttendanceController::class, 'storeUpdateRequest'])->name('attendance.update_request');
 
+    Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'index'])->name('stamp_correction_request.list');
 });
 
 
@@ -53,9 +56,6 @@ Route::post('/attendance/update-request', [AttendanceController::class, 'storeUp
 
 
 
-Route::get('/stamp_correction_request/list', function () {
-    return view('stamp_correction_request.request_list');
-})->name('request');
 
 /*
 |--------------------------------------------------------------------------
