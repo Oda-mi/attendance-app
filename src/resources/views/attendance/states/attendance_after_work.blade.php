@@ -8,7 +8,7 @@
 
     <ul class="header__buttons">
         <li><a href="{{ route('attendance.list') }}" class="button button--afterwork">今月の出勤一覧</a></li>
-        <li><a href="" class="button button--afterwork">申請一覧</a></li>
+        <li><a href="{{ route('stamp_correction_request.list') }}" class="button button--afterwork">申請一覧</a></li>
         <li>
             <form action="{{ route('logout') }}" method="post">
             @csrf
