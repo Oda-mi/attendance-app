@@ -288,11 +288,14 @@ class AttendanceController extends Controller
 
         $user = $attendanceData->user;
 
+        $layout = $user->is_admin ? 'layouts.admin' : 'layouts.auth';
+
         return view('attendance.attendance_detail', compact(
             'user',
             'attendanceData',
             'breaks',
-            'isEditable'
+            'isEditable',
+            'layout'
         ));
     }
 
