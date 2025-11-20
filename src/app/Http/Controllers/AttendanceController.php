@@ -225,27 +225,56 @@ class AttendanceController extends Controller
 
 
     public function detail(Request $request, $id = null)
-
     {
         $user = auth()->user();
 
         if ($user->is_admin) {
-            abort(403,'このページにはアクセスできません。');
+            abort(403, 'このページにはアクセスできません。');
         }
 
+        $isEditable = true;
+        $breaks = collect();
+        $attendanceData = null;
+
         if ($id) {
-            $attendance = Attendance::with('breaks')
-                                    ->where('id', $id)
-                                    ->where('user_id', $user->id)
-                                    ->findOrFail($id);
+            $updateRequest = AttendanceUpdateRequest::where('attendance_id', $id)
+                                                    ->where('user_id', $user->id)
+                                                    ->latest()
+                                                    ->first();
 
-            $breaks = $attendance->breaks;
+            if ($updateRequest && $updateRequest->status === 'pending') {
 
+                $attendanceData = $updateRequest;
+                $isEditable = false;
+
+                $breaks = collect(
+                    is_string($updateRequest->breaks)
+                    ? json_decode($updateRequest->breaks)
+                    : json_decode(json_encode($updateRequest->breaks))
+                );
+
+
+            } else {
+
+                $attendance = Attendance::with('breaks')
+                                        ->where('id', $id)
+                                        ->where('user_id', $user->id)
+                                        ->firstOrFail();
+
+                $attendanceData = $attendance;
+                $isEditable = true;
+
+                $breaks = collect(
+                    is_string($attendance->breaks)
+                    ? json_decode($attendance->breaks)
+                    : json_decode(json_encode($attendance->breaks))
+                );
+            }
         } else {
 
             $work_date = $request->input('date') ?? now()->format('Y-m-d');
 
-            $attendance = new Attendance([
+            $attendanceData = new Attendance([
                 'id' => 0,
                 'user_id' => $user->id,
                 'work_date' => $work_date,
@@ -254,12 +283,16 @@ class AttendanceController extends Controller
             ]);
 
             $breaks = collect();
+            $isEditable = true;
         }
 
-        return view('attendance.attendance_detail',compact(
+        $user = $attendanceData->user;
+
+        return view('attendance.attendance_detail', compact(
             'user',
-            'attendance',
-            'breaks'
+            'attendanceData',
+            'breaks',
+            'isEditable'
         ));
     }
 
