@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\StampCorrectionRequestController;
+use App\Http\Controllers\AdminAttendanceController;
 
 
 
@@ -47,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/attendance/update-request', [AttendanceController::class, 'storeUpdateRequest'])->name('attendance.update_request');
 
     Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'index'])->name('stamp_correction_request.list');
+
 });
 
 
@@ -74,10 +76,10 @@ Route::post('/admin/login', [AuthenticatedSessionController::class, 'store'])->n
 
 Route::middleware(['auth'])->group(function () {
 
-    // 管理者勤怠
-    Route::get('/admin/attendance/list', function () {
-        return view('admin.attendance.admin_attendance_list');
-    })->name('admin.attendance.list');
+    Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'dailyList'])->name('admin.attendance.list');
+
+    Route::get('/admin/attendance/detail/{id}', [AdminAttendanceController::class, 'detail'])->name('admin.attendance.detail');
+
 });
 
 
