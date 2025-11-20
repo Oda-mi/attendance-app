@@ -6,15 +6,19 @@
 
 @section('content')
 
+@php
+use Carbon\Carbon;
+@endphp
+
 <div class="common-table">
     <div class="common-table__title">
         <h1>
             <span class="common-table__title--line"></span>
-        2025年11月1日の勤怠
+        {{ $currentDate->format('Y年m月d日') }}の勤怠
         </h1>
     </div>
     <div class="common-table__nav">
-        <button>
+        <a href="{{ route('admin.attendance.list',  ['date' => $prevDate]) }}">
             <svg class="arrow-icon common-table__arrow-left" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 161 120" preserveAspectRatio="xMidYMid meet">
                 <g transform="translate(0,120) scale(0.1,-0.1)" stroke="none">
@@ -26,12 +30,12 @@
                 </g>
             </svg>
             前日
-        </button>
+        </a>
         <span>
             <img src="/images/calendar.svg" class="calendar-icon">
-            2025/11/01
+            {{ $currentDate->format('Y/m/d') }}
         </span>
-        <button>
+        <a href="{{ route('admin.attendance.list', ['date' => $nextDate]) }}">
             翌日
             <svg class="arrow-icon common-table__arrow-right" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 161 120" preserveAspectRatio="xMidYMid meet">
@@ -43,7 +47,7 @@
                 144 150 160 25 59 -12 138 -76 165 -40 17 -51 17 -89 0z"/>
                 </g>
             </svg>
-        </button>
+        </a>
     </div>
     <div class="common-table__table">
         <table>
@@ -58,69 +62,16 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach($attendances as $attendance)
                 <tr>
-                    <td>テスト太郎</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
+                    <td>{{ $attendance->user->name }}</td>
+                    <td>{{ $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '' }}</td>
+                    <td>{{ $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '' }}</td>
+                    <td>{{ gmdate('H:i', $attendance->breakTotal ?? 0) }}</td>
+                    <td>{{ $attendance->workTotal ? gmdate('H:i', $attendance->workTotal) : '' }}</td>
+                    <td><a href="{{ route('admin.attendance.detail', ['id' => $attendance->id]) }}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
-                <tr>
-                    <td>テスト太郎２</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>                </tr>
-                <tr>
-                    <td>テスト太郎３</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>テスト太郎４</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>テスト太郎５</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>テスト太郎６</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>テスト太郎７</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>テスト太郎８</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
