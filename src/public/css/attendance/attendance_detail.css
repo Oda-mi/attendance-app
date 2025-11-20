@@ -142,3 +142,27 @@
     text-align: left;
 }
 
+.attendance-detail__message {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.attendance-detail__message--pending {
+    font-size: 18px;
+    font-weight: bold;
+    color: #FF000080;
+}
+
+.attendance-detail__pending {
+    width: 100px;
+    height: 30px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+
