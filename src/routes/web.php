@@ -43,20 +43,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
 
-    Route::get('/attendance/detail/{id?}', [AttendanceController::class, 'detail'])->name('attendance.detail');
+    Route::get('/attendance/detail/{id?}', [AttendanceController::class, 'detail'])->whereNumber('id')->name('attendance.detail');
 
     Route::post('/attendance/update-request', [AttendanceController::class, 'storeUpdateRequest'])->name('attendance.update_request');
 
     Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'index'])->name('stamp_correction_request.list');
 
 });
-
-
-
-
-
-
-
 
 
 /*
@@ -78,7 +71,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'dailyList'])->name('admin.attendance.list');
 
-    Route::get('/admin/attendance/detail/{id}', [AdminAttendanceController::class, 'detail'])->name('admin.attendance.detail');
+    Route::get('/admin/attendance/{id}', [AdminAttendanceController::class, 'detail'])->whereNumber('id')->name('admin.attendance.detail');
+
+    Route::post('/admin/attendance/update/{id}', [AdminAttendanceController::class, 'update'])->whereNumber('id')->name('admin.attendance.update');
 
 });
 
@@ -91,10 +86,6 @@ Route::middleware(['auth'])->group(function () {
 Route::prefix('admin')->group(function () {
 
 
-
-    Route::get('/attendance/{id}', function ($id) {
-        return view('attendance.attendance_detail', compact('id'));
-    });
 
     Route::get('/attendance/staff/{id}', function ($id) {
         return view('admin.attendance.admin_attendance_staff', compact('id'));
