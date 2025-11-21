@@ -253,7 +253,6 @@ class AttendanceController extends Controller
                     : json_decode(json_encode($updateRequest->breaks))
                 );
 
-
             } else {
 
                 $attendance = Attendance::with('breaks')
