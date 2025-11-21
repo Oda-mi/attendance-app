@@ -165,4 +165,15 @@
     font-weight: bold;
 }
 
+.attendance-detail__textarea--pending {
+    width: 320px;
+    height: 30px;
+    margin-top: 20px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 15px;
+    font-weight: bold;
+}
 

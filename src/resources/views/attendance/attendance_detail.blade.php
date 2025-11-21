@@ -147,7 +147,7 @@ use Carbon\Carbon;
                         @if($isEditable)
                         <textarea  name="note" class="attendance-detail__textarea">{{ old('note', $attendanceData->note) }}</textarea>
                         @else
-                        <div class="attendance-detail__pending">
+                        <div class="attendance-detail__textarea--pending">
                             {{ $attendanceData->note }}
                         </div>
                         @endif
