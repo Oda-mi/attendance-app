@@ -18,8 +18,12 @@ use Carbon\Carbon;
         </h1>
     </div>
 
-<form action="{{ route('attendance.update_request') }}" method="post">
-            @csrf
+    @if(auth()->user()->is_admin)
+        <form action="{{ route('admin.attendance.update', ['id' => $attendanceData->id]) }}" method="post">
+    @else
+        <form action="{{ route('attendance.update_request') }}" method="post">
+    @endif
+        @csrf
         <input type="hidden" name="attendanceId" value="{{ $attendanceData->id ?? 0 }}">
         <input type="hidden" name="work_date" value="{{ $attendanceData->work_date }}">
 
