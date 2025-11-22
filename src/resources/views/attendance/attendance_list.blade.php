@@ -71,7 +71,7 @@ use Carbon\Carbon;
                         @if($attendance->start_time && $attendance->end_time)
                             {{ gmdate('H:i', $attendance->breakTotal ?? 0) }}
                         @else
-                            {{-- 出勤してない日は空白 --}}
+                            {{-- 出勤・退勤の両方がない場合、または退勤していない場合は空白 --}}
                         @endif
                     </td>
                     <td>{{ $attendance->workTotal ? gmdate('H:i', $attendance->workTotal) : '' }}</td>

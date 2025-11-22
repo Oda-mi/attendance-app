@@ -67,7 +67,13 @@ use Carbon\Carbon;
                     <td>{{ $attendance->user->name }}</td>
                     <td>{{ $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '' }}</td>
                     <td>{{ $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '' }}</td>
-                    <td>{{ gmdate('H:i', $attendance->breakTotal ?? 0) }}</td>
+                    <td>
+                        @if($attendance->start_time && $attendance->end_time)
+                            {{ gmdate('H:i', $attendance->breakTotal ?? 0) }}
+                        @else
+                            {{-- 出勤・退勤の両方がない場合、または退勤していない場合は空白 --}}
+                        @endif
+                    </td>
                     <td>{{ $attendance->workTotal ? gmdate('H:i', $attendance->workTotal) : '' }}</td>
                     <td><a href="{{ route('admin.attendance.detail', ['id' => $attendance->id]) }}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
