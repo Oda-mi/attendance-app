@@ -156,4 +156,19 @@ class AdminAttendanceController extends Controller
     }
 
 
+
+    public function staffList()
+    {
+        $admin = auth()->user();
+
+        if (!$admin->is_admin) {
+            abort(403, 'アクセス権限がありません。');
+        }
+
+        $staffs = User::where('is_admin', 0)->get();
+
+        return view('admin.staff.admin_staff_list', compact('staffs'));
+    }
+
+
 }

@@ -75,6 +75,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/admin/attendance/update/{id}', [AdminAttendanceController::class, 'update'])->whereNumber('id')->name('admin.attendance.update');
 
+    Route::get('/admin/staff/list', [AdminAttendanceController::class, 'staffList'])->name('admin.staff.list');
+
+    
 });
 
 
@@ -91,10 +94,6 @@ Route::prefix('admin')->group(function () {
         return view('admin.attendance.admin_attendance_staff', compact('id'));
     })->name('admin.attendance.staff');
 
-    // スタッフ一覧
-    Route::get('/staff/list', function () {
-        return view('admin.staff.admin_staff_list');
-    })->name('admin.staff.list');
 });
 
 /*

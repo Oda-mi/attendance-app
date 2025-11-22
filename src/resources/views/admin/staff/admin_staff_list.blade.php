@@ -24,45 +24,13 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach($staffs as $staff)
                 <tr>
-                    <td>テスト太郎</td>
-                    <td>testtaro@email.com</td>
+                    <td>{{ $staff->name }}</td>
+                    <td>{{ $staff->email }}</td>
                     <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
                 </tr>
-                <tr>
-                    <td>テスト太郎２</td>
-                    <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                    <td>テスト太郎３</td>
-                    <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>テスト太郎４</td>
-                    <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>テスト太郎５</td>
-                    <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>テスト太郎６</td>
-                    <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>テスト太郎７</td>
-                    <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>テスト太郎８</td>
-                    <td>testtaro@email.com</td>
-                    <td><a href="/attendance/detail/{id}" class="common-table__detail-btn">詳細</a></td>
-                </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
