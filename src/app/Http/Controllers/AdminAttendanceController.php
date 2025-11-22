@@ -21,11 +21,15 @@ class AdminAttendanceController extends Controller
             abort(403, 'アクセス権限がありません。');
         }
 
-        $today = Carbon::today();
+        $today = Carbon::today()->toDateString();
 
-        $date = $request->input('date', $today->toDateString());
+        $request->validate([
+            'date' => ['nullable', 'date_format:Y-m-d'],
+        ]);
 
-        $currentDate = Carbon::parse($date);
+        $dateString = $request->input('date', $today);
+
+        $currentDate = Carbon::createFromFormat('Y-m-d', $dateString);
 
         $attendances = Attendance::with('breaks', 'user')
                                 ->whereDate('work_date', $currentDate)
@@ -68,9 +72,9 @@ class AdminAttendanceController extends Controller
             $isEditable = false;
 
             $breaks = collect(
-                    is_string($pendingRequest->breaks)
-                    ? json_decode($pendingRequest->breaks)
-                    : json_decode(json_encode($pendingRequest->breaks))
+                is_string($pendingRequest->breaks)
+                ? json_decode($pendingRequest->breaks)
+                : json_decode(json_encode($pendingRequest->breaks))
             );
 
         } else {
@@ -79,9 +83,9 @@ class AdminAttendanceController extends Controller
             $isEditable = true;
 
             $breaks = collect(
-            is_string($attendance->breaks)
-            ? json_decode($attendance->breaks)
-            : json_decode(json_encode($attendance->breaks))
+                is_string($attendance->breaks)
+                ? json_decode($attendance->breaks)
+                : json_decode(json_encode($attendance->breaks))
             );
         }
 
@@ -102,6 +106,12 @@ class AdminAttendanceController extends Controller
 
     public function update(AttendanceUpdateRequestForm $request, $id)
     {
+        $admin = auth()->user();
+
+        if (!$admin->is_admin) {
+            abort(403, 'アクセス権限がありません。');
+        }
+
         $validated = $request->validated();
 
         DB::transaction(function() use ($id, $validated, $request) {

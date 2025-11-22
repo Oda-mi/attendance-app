@@ -173,13 +173,21 @@ class AttendanceController extends Controller
         $user = auth()->user();
 
         if ($user->is_admin) {
-            abort(403,'このページにはアクセスできません。');
+            abort(403, 'このページにはアクセスできません。');
         }
 
-        $today = Carbon::today();
+        $today = Carbon::today()->toDateString();
 
-        $year = $request->input('year', $today->year);
-        $month = $request->input('month', $today->month);
+        $request->validate([
+            'year' => ['nullable', 'integer', 'min:2000', 'max:2100'],
+            'month' => ['nullable', 'integer', 'min:1', 'max:12'],
+        ]);
+
+        $year = $request->input('year', Carbon::parse($today)->year);
+        $month = $request->input('month', Carbon::parse($today)->month);
+
+        $start = Carbon::createFromDate($year, $month, 1);
+        $end = $start->copy()->endOfMonth();
 
         $attendances = Attendance::with('breaks')
                                 ->where('user_id', $user->id)
@@ -188,13 +196,10 @@ class AttendanceController extends Controller
                                 ->orderBy('work_date','asc')
                                 ->get();
 
-        $displayMonth = Carbon::createFromDate($year, $month, 1)->format('Y/m');
+        $displayMonth = $start->format('Y/m');
 
-        $prevMonth = Carbon::createFromDate($year, $month, 1)->subMonth();
-        $nextMonth = Carbon::createFromDate($year, $month, 1)->addMonth();
-
-        $start = Carbon::createFromDate($year, $month, 1);
-        $end   = (clone $start)->endOfMonth();
+        $prevMonth = $start->copy()->subMonth();
+        $nextMonth = $start->copy()->addMonth();
 
         $period = CarbonPeriod::create($start, $end);
 
@@ -214,7 +219,7 @@ class AttendanceController extends Controller
             ];
         });
 
-        return view('attendance.attendance_list',compact(
+        return view('attendance.attendance_list', compact(
             'attendanceDays',
             'displayMonth',
             'prevMonth',
