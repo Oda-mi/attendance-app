@@ -13,12 +13,12 @@ class StampCorrectionRequestController extends Controller
 
         $pendingRequests = AttendanceUpdateRequest::where('user_id', $user->id)
                                 ->where('status', 'pending')
-                                ->orderBy('created_at', 'desc')
+                                ->orderBy('work_date', 'asc')
                                 ->get();
 
         $approvedRequests = AttendanceUpdateRequest::where('user_id', $user->id)
                                 ->where('status', 'approved')
-                                ->orderBy('created_at', 'desc')
+                                ->orderBy('work_date', 'asc')
                                 ->get();
 
         return view('stamp_correction_request.request_list',compact('pendingRequests', 'approvedRequests'));
