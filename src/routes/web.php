@@ -73,28 +73,21 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/admin/attendance/{id}', [AdminAttendanceController::class, 'detail'])->whereNumber('id')->name('admin.attendance.detail');
 
-    Route::post('/admin/attendance/update/{id}', [AdminAttendanceController::class, 'update'])->whereNumber('id')->name('admin.attendance.update');
+    Route::post('/admin/attendance/upsert', [AdminAttendanceController::class, 'upsertAttendance'])->name('admin.attendance.upsert');
 
     Route::get('/admin/staff/list', [AdminAttendanceController::class, 'staffList'])->name('admin.staff.list');
 
-    
-});
-
-
-
-
-
-
-
-Route::prefix('admin')->group(function () {
-
-
-
-    Route::get('/attendance/staff/{id}', function ($id) {
-        return view('admin.attendance.admin_attendance_staff', compact('id'));
-    })->name('admin.attendance.staff');
+    Route::get('/admin/staff/{id}', [AdminAttendanceController::class, 'staffMonthlyList'])->whereNumber('id')->name('admin.attendance.staff');
 
 });
+
+
+
+
+
+
+
+
 
 /*
 |--------------------------------------------------------------------------
