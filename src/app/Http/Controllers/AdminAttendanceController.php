@@ -35,9 +35,6 @@ class AdminAttendanceController extends Controller
 
         $attendances = Attendance::with('breaks', 'user')
                                 ->whereDate('work_date', $attendanceDate)
-                                ->whereHas('user', function ($query) {
-                                    $query->where('is_admin', 0); // 一般ユーザーだけ
-                                })
                                 ->orderBy(User::select('name')->whereColumn('users.id', 'attendances.user_id'))
                                 ->get();
 
@@ -53,81 +50,77 @@ class AdminAttendanceController extends Controller
     }
 
 
+
     public function detail(Request $request, $id = null)
-{
-    $admin = auth()->user();
+    {
+        $admin = auth()->user();
 
-    if (!$admin->is_admin) {
-        abort(403, 'アクセス権限がありません。');
-    }
-
-    $breaks = collect();
-    $attendanceData = null;
-    $isEditable = true;
-    $user = null;
-
-    if ($id) {
-        // 勤怠レコード取得
-        $attendance = Attendance::with('breaks','user','attendanceUpdateRequests')
-                                ->findOrFail($id);
-
-        // attendance に紐付くユーザーを取得
-        $user = $attendance->user;
-
-        // 保留中の修正申請がある場合
-        $pendingRequest = $attendance->attendanceUpdateRequests()
-                                    ->where('status', 'pending')
-                                    ->latest()
-                                    ->first();
-
-        if ($pendingRequest) {
-            $attendanceData = $pendingRequest;
-            $isEditable = false;
-
-            $breaks = collect(
-                is_string($pendingRequest->breaks)
-                ? json_decode($pendingRequest->breaks)
-                : json_decode(json_encode($pendingRequest->breaks))
-            );
-        } else {
-            $attendanceData = $attendance;
-            $isEditable = true;
-
-            $breaks = collect(
-                is_string($attendance->breaks)
-                ? json_decode($attendance->breaks)
-                : json_decode(json_encode($attendance->breaks))
-            );
+        if (!$admin->is_admin) {
+            abort(403, 'アクセス権限がありません。');
         }
-    } else {
-        // $id が渡されなかった場合は新規作成用
-        $work_date = $request->input('date') ?? now()->format('Y-m-d');
-
-        // hidden で送られた user_id からユーザー取得
-        $user = User::findOrFail($request->input('user_id'));
-
-        $attendanceData = new Attendance([
-            'id' => 0,
-            'work_date' => $work_date,
-            'user_id' => $user->id,
-            'start_time' => null,
-            'end_time' => null,
-        ]);
 
         $breaks = collect();
+        $attendanceData = null;
         $isEditable = true;
+        $user = null;
+
+        if ($id) {
+            $attendance = Attendance::with('breaks','user','attendanceUpdateRequests')
+                                    ->findOrFail($id);
+
+            $user = $attendance->user;
+
+            $pendingRequest = $attendance->attendanceUpdateRequests()
+                                        ->where('status', 'pending')
+                                        ->latest()
+                                        ->first();
+
+            if ($pendingRequest) {
+                $attendanceData = $pendingRequest;
+                $isEditable = false;
+
+                $breaks = collect(
+                    is_string($pendingRequest->breaks)
+                    ? json_decode($pendingRequest->breaks)
+                    : json_decode(json_encode($pendingRequest->breaks))
+                );
+            } else {
+                $attendanceData = $attendance;
+                $isEditable = true;
+
+                $breaks = collect(
+                    is_string($attendance->breaks)
+                    ? json_decode($attendance->breaks)
+                    : json_decode(json_encode($attendance->breaks))
+                );
+            }
+        } else {
+            $work_date = $request->input('date') ?? now()->format('Y-m-d');
+
+            $user = User::findOrFail($request->input('user_id'));
+
+            $attendanceData = new Attendance([
+                'id' => 0,
+                'work_date' => $work_date,
+                'user_id' => $user->id,
+                'start_time' => null,
+                'end_time' => null,
+            ]);
+
+            $breaks = collect();
+            $isEditable = true;
+        }
+
+        $layout = 'layouts.admin';
+
+        return view('attendance.attendance_detail', compact(
+            'user',
+            'attendanceData',
+            'breaks',
+            'isEditable',
+            'layout'
+        ));
     }
-
-    $layout = 'layouts.admin';
-
-    return view('attendance.attendance_detail', compact(
-        'user',
-        'attendanceData',
-        'breaks',
-        'isEditable',
-        'layout'
-    ));
-}
 
 
 
@@ -154,7 +147,7 @@ class AdminAttendanceController extends Controller
             abort(403, 'アクセス権限がありません。');
         }
 
-        $user = User::where('is_admin', 0)->findOrFail($id);
+        $user = User::findOrFail($id);
 
         $today = Carbon::today()->toDateString();
 
@@ -210,65 +203,59 @@ class AdminAttendanceController extends Controller
     }
 
 
-    
-public function upsertAttendance(AttendanceUpdateRequestForm $request)
-{
-    $admin = auth()->user();
-    $validated = $request->validated();
 
-    $attendanceId = (int) $request->input('attendanceId', 0);
-    $userId = (int) $request->input('user_id'); // hidden で送ってきたやつ
-    $workDate = $request->input('work_date');
+    public function upsertAttendance(AttendanceUpdateRequestForm $request)
+    {
+        $admin = auth()->user();
+        $validated = $request->validated();
 
-    DB::transaction(function () use ($attendanceId, $userId, $workDate, $validated, $request, &$attendance) {
+        $attendanceId = (int) $request->input('attendanceId', 0);
+        $userId = (int) $request->input('user_id'); // hidden で送ってきたやつ
+        $workDate = $request->input('work_date');
 
-        //  勤怠レコードを取得 or 新規作成
-        if ($attendanceId === 0) {
-            // 勤怠なし → 新規作成
-            $attendance = Attendance::create([
-                'user_id'    => $userId,
-                'work_date'  => $workDate,
-                'start_time' => $validated['start_time'],
-                'end_time'   => $validated['end_time'],
-                'note'       => $validated['note'],
-            ]);
-        } else {
-            // 勤怠あり → 更新
-            $attendance = Attendance::findOrFail($attendanceId);
+        DB::transaction(function () use ($attendanceId, $userId, $workDate, $validated, $request, &$attendance) {
 
-            $attendance->update([
-                'start_time' => $validated['start_time'],
-                'end_time'   => $validated['end_time'],
-                'note'       => $validated['note'],
-            ]);
-        }
+            if ($attendanceId === 0) {
 
-        // 休憩の反映（毎回リセットして再登録）
-        $attendance->breaks()->delete();
+                $attendance = Attendance::create([
+                    'user_id'    => $userId,
+                    'work_date'  => $workDate,
+                    'start_time' => $validated['start_time'],
+                    'end_time'   => $validated['end_time'],
+                    'note'       => $validated['note'],
+                ]);
+            } else {
 
-        $breakStarts = $request->input('break_start', []);
-        $breakEnds   = $request->input('break_end', []);
+                $attendance = Attendance::findOrFail($attendanceId);
 
-        $workDate = Carbon::parse($attendance->work_date)->format('Y-m-d');
+                $attendance->update([
+                    'start_time' => $validated['start_time'],
+                    'end_time'   => $validated['end_time'],
+                    'note'       => $validated['note'],
+                ]);
+            }
 
-        foreach ($breakStarts as $index => $start) {
-            $start = trim($start ?? '');
-            $end = trim($breakEnds[$index] ?? '');
+            $attendance->breaks()->delete();
 
-            if ($start === '' && $end === '') continue;
+            $breakStarts = $request->input('break_start', []);
+            $breakEnds   = $request->input('break_end', []);
 
-            $attendance->breaks()->create([
-                'start_time' => $start ? $workDate.' '.$start : null,
-                'end_time'   => $end   ? $workDate.' '.$end   : null,
-    ]);
-        }
-    });
+            $workDate = Carbon::parse($attendance->work_date)->format('Y-m-d');
 
-    return redirect()->route('admin.attendance.detail', ['id' => $attendance->id]);
-}
+            foreach ($breakStarts as $index => $start) {
+                $start = trim($start ?? '');
+                $end = trim($breakEnds[$index] ?? '');
 
+                if ($start === '' && $end === '') continue;
 
+                $attendance->breaks()->create([
+                    'start_time' => $start ? $workDate.' '.$start : null,
+                    'end_time'   => $end   ? $workDate.' '.$end   : null,
+                ]);
+            }
+        });
 
-
+        return redirect()->route('admin.attendance.detail', ['id' => $attendance->id]);
+    }
 
 }
