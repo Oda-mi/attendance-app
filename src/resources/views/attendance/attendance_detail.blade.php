@@ -173,7 +173,7 @@ use Carbon\Carbon;
         </div>
         @else
         <div class="attendance-detail__message">
-            <p class="attendance-detail__message--pending">＊承認待ちのため修正はできません。</p>
+            <p class="attendance-detail__message--pending">*承認待ちのため修正はできません。</p>
         </div>
         @endif
     </form>
