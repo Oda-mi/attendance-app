@@ -14,7 +14,7 @@ use Carbon\Carbon;
     <div class="common-table__title">
         <h1>
             <span class="common-table__title--line"></span>
-        {{ $currentDate->format('Y年m月d日') }}の勤怠
+        {{ $attendanceDate->format('Y年m月d日') }}の勤怠
         </h1>
     </div>
     <div class="common-table__nav">
@@ -33,7 +33,7 @@ use Carbon\Carbon;
         </a>
         <span>
             <img src="/images/calendar.svg" class="calendar-icon">
-            {{ $currentDate->format('Y/m/d') }}
+            {{ $attendanceDate->format('Y/m/d') }}
         </span>
         <a href="{{ route('admin.attendance.list', ['date' => $nextDate]) }}">
             翌日
@@ -75,7 +75,12 @@ use Carbon\Carbon;
                         @endif
                     </td>
                     <td>{{ $attendance->workTotal ? gmdate('H:i', $attendance->workTotal) : '' }}</td>
-                    <td><a href="{{ route('admin.attendance.detail', ['id' => $attendance->id]) }}" class="common-table__detail-btn">詳細</a></td>
+                    <td><a href="{{ route('admin.attendance.detail', [
+                            'id' => $attendance->id ?? 0,
+                            'date' => $attendance->work_date,
+                            'user_id' => $attendance->user->id,
+                        ]) }}" class="common-table__detail-btn">詳細</a>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
