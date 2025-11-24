@@ -125,7 +125,7 @@ class AttendanceUpdateRequestForm extends FormRequest
     public function messages()
     {
         return [
-            'note.required' =>'備考を入力してください',
+            'note.required' =>'備考を記入してください',
         ];
     }
 
