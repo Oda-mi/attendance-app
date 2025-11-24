@@ -75,10 +75,10 @@ use Carbon\Carbon;
                         @error('time')
                             {{ $message }}
                         @enderror
-                        @error('start_time')
+                        @error('work_time_format')
                             {{ $message }}
                         @enderror
-                        @error('end_time')
+                        @error('start_time')
                             {{ $message }}
                         @enderror
                         </div>
@@ -110,10 +110,19 @@ use Carbon\Carbon;
                             @endif
                         </div>
                         <div class="attendance-form__error">
+                            @error("break_start_format.$index")
+                                {{ $message }}
+                            @enderror
+                            @error("break_end_format.$index")
+                            {{ $message }}
+                            @enderror
                             @error("break_start.$index")
                                 {{ $message }}
                             @enderror
                             @error("break_end.$index")
+                                {{ $message }}
+                            @enderror
+                            @error("break_start_end.$index")
                                 {{ $message }}
                             @enderror
                         </div>
@@ -138,10 +147,19 @@ use Carbon\Carbon;
                             >
                         </div>
                         <div class="attendance-form__error">
+                            @error("break_start_format." . $breaks->count())
+                                {{ $message }}
+                            @enderror
+                            @error("break_end_format." . $breaks->count())
+                                {{ $message }}
+                            @enderror
                             @error("break_start." . $breaks->count())
                                 {{ $message }}
                             @enderror
                             @error("break_end." . $breaks->count())
+                                {{ $message }}
+                            @enderror
+                            @error("break_start_end." . $breaks->count())
                                 {{ $message }}
                             @enderror
                         </div>
