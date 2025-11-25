@@ -47,7 +47,7 @@ class StampCorrectionRequestController extends Controller
             ));
     }
 
-    public function approve($id)
+    public function showApproveForm($id)
     {
         $requestData = AttendanceUpdateRequest::with(['user', 'attendance.breaks'])
                                                 ->findOrFail($id);

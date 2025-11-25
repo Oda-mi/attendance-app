@@ -80,7 +80,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/staff/{id}', [AdminAttendanceController::class, 'staffMonthlyList'])->whereNumber('id')->name('admin.attendance.staff');
 
     Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}',
-        [StampCorrectionRequestController::class, 'approve'])
+        [StampCorrectionRequestController::class, 'showApproveForm'])
         ->whereNumber('attendance_correct_request_id')
         ->name('stamp_correction_request.approve');
 });
