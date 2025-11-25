@@ -28,7 +28,7 @@ class AttendanceUpdateRequestForm extends FormRequest
             'end_time' => 'nullable',
             'break_start.*' => 'nullable',
             'break_end.*' => 'nullable',
-            'note' => 'required|string',
+            'note' => 'required|string|max:200',
         ];
     }
 
@@ -42,7 +42,7 @@ class AttendanceUpdateRequestForm extends FormRequest
 
     /*
     |--------------------------------------------------------------------------
-    | 出退勤バリデーション
+    | 出退勤バリデーション(要件シートに記載されている部分)
     |--------------------------------------------------------------------------
     */
             // 出勤・退勤のタイムスタンプ
@@ -51,9 +51,14 @@ class AttendanceUpdateRequestForm extends FormRequest
 
             // 出勤時間・退勤時間チェック
             if ($workStartTimestamp && $workEndTimestamp && $workStartTimestamp > $workEndTimestamp) {
-                $validator->errors()->add('start_time', '出勤時間もしくは退勤時間が不適切な値です');
+                $validator->errors()->add('work_time', '出勤時間もしくは退勤時間が不適切な値です');
             }
 
+    /*
+    |--------------------------------------------------------------------------
+    | 出退勤バリデーション(要件外：追加チェック作成)
+    |--------------------------------------------------------------------------
+    */
             //入力必須チェック
             if (empty($startTime) || empty($endTime)) {
                 $validator->errors()->add('time', '出勤時間と退勤時間は必ず入力してください');
@@ -76,7 +81,7 @@ class AttendanceUpdateRequestForm extends FormRequest
 
     /*
     |--------------------------------------------------------------------------
-    | 休憩時間バリデーション
+    | 休憩時間バリデーション（要件シートに記載されている部分）
     |--------------------------------------------------------------------------
     */
             // 休憩チェックのタイムスタンプ
@@ -94,7 +99,11 @@ class AttendanceUpdateRequestForm extends FormRequest
                     $validator->errors()->add("break_end.$index", '休憩時間もしくは退勤時間が不適切な値です');
                 }
             }
-
+    /*
+    |--------------------------------------------------------------------------
+    | 休憩時間バリデーション（要件外：追加チェック作成）
+    |--------------------------------------------------------------------------
+    */
             //入力形式チェック(HH:MM)
             foreach ($this->break_start ?? [] as $index => $breakStart) {
                 if ($breakStart !== null && $breakStart !== '' && !preg_match('/^\d{1,2}:\d{2}$/', $breakStart)) {
@@ -126,6 +135,7 @@ class AttendanceUpdateRequestForm extends FormRequest
     {
         return [
             'note.required' =>'備考を記入してください',
+            'note.max'      =>'備考は200文字以内で入力してください',
         ];
     }
 
