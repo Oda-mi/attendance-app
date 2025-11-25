@@ -6,6 +6,10 @@
 
 @section('content')
 
+@php
+use Carbon\Carbon;
+@endphp
+
 <div class="attendance-detail">
     <div class="attendance-detail__title">
         <h1>
@@ -22,7 +26,7 @@
                     <th>名前</th>
                     <td colspan="3">
                         <div class="attendance-detail__user">
-                            <div class="user-name">テスト 太郎</div>
+                            <div class="user-name">{{ $requestData->user->name }}</div>
                         </div>
                     </td>
                 </tr>
@@ -30,8 +34,8 @@
                     <th>日付</th>
                     <td colspan="2">
                         <div class="attendance-detail__date">
-                            <div class="date-year">2025年</div>
-                            <div>11月01日</div>
+                            <div class="date-year">{{ $requestData->work_date ? Carbon::parse($requestData->work_date)->format('Y年') : '' }}</div>
+                            <div>{{ $requestData->work_date ? Carbon::parse($requestData->work_date)->format('m月d日') : '' }}</div>
                         </div>
                     </td>
                 </tr>
@@ -39,37 +43,37 @@
                     <th>出勤・退勤</th>
                     <td colspan="3">
                         <div class="attendance-detail__time">
-                            <div class="start_time">09:00</div>
+                            <div class="start_time">
+                                {{$requestData->start_time ? Carbon::parse($requestData->start_time)->format('H:i') : ''}}
+                            </div>
                             <span>～</span>
-                            <div>18:00</div>
+                            <div>
+                                {{$requestData->end_time ? Carbon::parse($requestData->end_time)->format('H:i') : ''}}
+                            </div>
                         </div>
                     </td>
                 </tr>
+                @foreach($breaks as $index => $break)
                 <tr>
-                    <th>休憩</th>
+                    <th>{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</th>
                     <td colspan="3">
                         <div class="attendance-detail__time">
-                            <div class="start_time">12:00</div>
+                            <div class="start_time">
+                                {{ $break->start_time ? Carbon::parse($break->start_time)->format('H:i') : '' }}
+                            </div>
                             <span>～</span>
-                            <div>13:00</div>
+                            <div>
+                                {{ $break->end_time ? Carbon::parse($break->end_time)->format('H:i') : '' }}
+                            </div>
                         </div>
                     </td>
                 </tr>
-                <tr>
-                    <th>休憩２</th>
-                    <td colspan="3">
-                        <div class="attendance-detail__time">
-                            <div class="start_time"></div>
-                            <span></span>
-                            <div></div>
-                        </div>
-                    </td>
-                </tr>
+                @endforeach
                 <tr>
                     <th>備考</th>
                     <td colspan="3">
                         <div class="attendance-detail__comment">
-                            電車遅延のため
+                            {{ $requestData->note }}
                         </div>
                     </td>
                 </tr>
