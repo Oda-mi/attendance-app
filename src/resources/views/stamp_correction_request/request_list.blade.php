@@ -1,4 +1,4 @@
-@extends('layouts.auth')
+@extends($layout)
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/stamp_correction_request/request_list.css') }}">
@@ -20,7 +20,7 @@ use Carbon\Carbon;
 
     <div class="nav">
         <div class="nav__tabs">
-            <a href="#" class="nav__tab active" data-target="pending">承認待ち</a>
+            <a href="#" class="nav__tab nav__tab--active" data-target="pending">承認待ち</a>
             <a href="#" class="nav__tab" data-target="approved">承認済み</a>
         </div>
     </div>
@@ -45,7 +45,13 @@ use Carbon\Carbon;
                     <td>{{ Carbon::parse($request->work_date)->format('Y/m/d') }}</td>
                     <td>{{ $request->note }}</td>
                     <td>{{ Carbon::parse($request->created_at)->format('Y/m/d') }}</td>
-                    <td><a href="{{ route('attendance.detail', ['id' => $request->attendance_id]) }}" class="common-table__detail-btn">詳細</a></td>
+                    <td>
+                        @if(auth()->user()->is_admin)
+                            <a href="{{ route('stamp_correction_request.approve', ['attendance_correct_request_id' => $request->id]) }}" class="common-table__detail-btn">詳細</a>
+                        @else
+                            <a href="{{ route('attendance.detail', ['id' => $request->attendance_id]) }}" class="common-table__detail-btn">詳細</a>
+                        @endif
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
@@ -95,8 +101,8 @@ use Carbon\Carbon;
                 const targetContentId = tabButton.dataset.target;
 
                 // タブのアクティブ切り替え
-                tabButtons.forEach(button => button.classList.remove('active'));
-                tabButton.classList.add('active');
+                tabButtons.forEach(button => button.classList.remove('nav__tab--active'));
+                tabButton.classList.add('nav__tab--active');
 
                 // コンテンツの表示切り替え
                 tabContents.forEach(content => {
