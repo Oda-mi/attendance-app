@@ -78,7 +78,7 @@ use Carbon\Carbon;
                         @error('work_time_format')
                             {{ $message }}
                         @enderror
-                        @error('start_time')
+                        @error('work_time')
                             {{ $message }}
                         @enderror
                         </div>
