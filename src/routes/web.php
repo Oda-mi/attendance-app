@@ -79,21 +79,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/admin/staff/{id}', [AdminAttendanceController::class, 'staffMonthlyList'])->whereNumber('id')->name('admin.attendance.staff');
 
+    Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}',
+        [StampCorrectionRequestController::class, 'approve'])
+        ->whereNumber('attendance_correct_request_id')
+        ->name('stamp_correction_request.approve');
 });
 
 
 
-
-
-
-
-
-
-/*
-|--------------------------------------------------------------------------
-| 申請関連（管理者用承認画面）
-|--------------------------------------------------------------------------
-*/
-Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}', function ($attendance_correct_request_id) {
-    return view('stamp_correction_request.request_approve', compact('attendance_correct_request_id'));
-});
