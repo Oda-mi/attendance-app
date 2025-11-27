@@ -82,7 +82,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}',
         [StampCorrectionRequestController::class, 'showApproveForm'])
         ->whereNumber('attendance_correct_request_id')
+        ->name('stamp_correction_request.showApproveForm');
+
+    Route::post('/stamp_correction_request/approve/{attendance_correct_request_id}',
+        [StampCorrectionRequestController::class, 'approve'])
+        ->whereNumber('attendance_correct_request_id')
         ->name('stamp_correction_request.approve');
+
 });
 
 
