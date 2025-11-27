@@ -18,7 +18,7 @@ use Carbon\Carbon;
         </h1>
     </div>
 
-    <form action="" method="post">
+    <form action="{{ route('stamp_correction_request.approve', ['attendance_correct_request_id' => $requestData->id]) }}" method="post">
         @csrf
         <div class="attendance-detail__table">
             <table>
@@ -59,11 +59,11 @@ use Carbon\Carbon;
                     <td colspan="3">
                         <div class="attendance-detail__time">
                             <div class="start_time">
-                                {{ $break->start_time ? Carbon::parse($break->start_time)->format('H:i') : '' }}
+                                {{ $break['start_time'] ? Carbon::parse($break['start_time'])->format('H:i') : '' }}
                             </div>
                             <span>～</span>
                             <div>
-                                {{ $break->end_time ? Carbon::parse($break->end_time)->format('H:i') : '' }}
+                                {{ $break['end_time'] ? Carbon::parse($break['end_time'])->format('H:i') : '' }}
                             </div>
                         </div>
                     </td>
@@ -80,7 +80,11 @@ use Carbon\Carbon;
             </table>
         </div>
         <div class="attendance-detail__button">
-            <button type="submit">承認</button>
+            @if ($requestData->status === 'approved')
+                <button class="approved-btn" disabled>承認済み</button>
+            @else
+                <button type="submit" class="approve-btn">承認</button>
+            @endif
         </div>
     </form>
 </div>
