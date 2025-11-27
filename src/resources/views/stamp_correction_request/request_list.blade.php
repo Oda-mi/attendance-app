@@ -77,7 +77,13 @@ use Carbon\Carbon;
                     <td>{{ Carbon::parse($request->work_date)->format('Y/m/d') }}</td>
                     <td>{{ $request->note }}</td>
                     <td>{{ Carbon::parse($request->created_at)->format('Y/m/d') }}</td>
-                    <td><a href="{{ route('attendance.detail', ['id' => $request->attendance_id]) }}" class="common-table__detail-btn">詳細</a></td>
+                    <td>
+                        @if (auth()->user()->is_admin)
+                            <a href="{{ route('stamp_correction_request.approve', ['attendance_correct_request_id' => $request->id]) }}" class="common-table__detail-btn">詳細</a>
+                        @else
+                            <a href="{{ route('attendance.detail', ['id' => $request->attendance_id]) }}" class="common-table__detail-btn">詳細</a>
+                        @endif
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
