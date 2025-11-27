@@ -105,9 +105,18 @@ class StampCorrectionRequestController extends Controller
             $attendance->breaks()->delete();
 
             foreach ($requestData->breaks as $break) {
+
+                $start = isset($break['start_time'])
+                        ? trim($break['start_time'])
+                        : null;
+
+                $end = isset($break['end_time'])
+                    ? trim($break['end_time'])
+                    : null;
+
                 $attendance->breaks()->create([
-                    'start_time' => isset($break['start_time']) ? $workDate . ' ' . $break['start_time'] : null,
-                    'end_time'   => isset($break['end_time'])   ? $workDate . ' ' . $break['end_time']   : null,
+                    'start_time' => $start ? $workDate . ' ' . $start : null,
+                    'end_time'   => $end   ? $workDate . ' ' . $end   : null,
                 ]);
             }
         });
