@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AttendanceUpdateRequest;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class StampCorrectionRequestController extends Controller
 {
+
     public function index()
     {
         $user = auth()->user();
@@ -47,17 +50,70 @@ class StampCorrectionRequestController extends Controller
             ));
     }
 
+
+
     public function showApproveForm($id)
     {
-        $requestData = AttendanceUpdateRequest::with(['user', 'attendance.breaks'])
+        $admin = auth()->user();
+
+        if (!$admin->is_admin) {
+            abort(403, 'アクセス権限がありません。');
+        }
+
+        $requestData = AttendanceUpdateRequest::with('user', 'attendance')
                                                 ->findOrFail($id);
 
-        $breaks = $requestData->attendance ? $requestData->attendance->breaks : collect();
+        $breaks = $requestData->breaks ?? [];
 
         return view('stamp_correction_request.request_approve', compact(
             'requestData',
             'breaks'
         ));
+    }
+
+
+
+    public function approve($id)
+    {
+        $admin = auth()->user();
+
+        if (!$admin->is_admin) {
+            abort(403, 'アクセス権限がありません。');
+        }
+
+        $requestData = AttendanceUpdateRequest::with(['attendance', 'user'])
+                                                    ->findOrFail($id);
+
+        DB::transaction(function () use ($requestData) {
+
+            $requestData->status = 'approved';
+            $requestData->save();
+
+            $attendance = $requestData->attendance;
+
+            $workDate = Carbon::parse($attendance->work_date)->format('Y-m-d');
+
+            $startDateTime = $workDate . ' ' . $requestData->start_time;
+            $endDateTime   = $workDate . ' ' . $requestData->end_time;
+
+            $attendance->update([
+                'start_time' => $startDateTime,
+                'end_time'   => $endDateTime,
+                'note'       => $requestData->note,
+            ]);
+
+            $attendance->breaks()->delete();
+
+            foreach ($requestData->breaks as $break) {
+                $attendance->breaks()->create([
+                    'start_time' => isset($break['start_time']) ? $workDate . ' ' . $break['start_time'] : null,
+                    'end_time'   => isset($break['end_time'])   ? $workDate . ' ' . $break['end_time']   : null,
+                ]);
+            }
+        });
+
+        return redirect()->route('stamp_correction_request.showApproveForm', ['attendance_correct_request_id' => $requestData->id]);
+
     }
 
 
