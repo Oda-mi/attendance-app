@@ -23,24 +23,12 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => '一般ユーザー',
-            'email' => 'user@example.com',
+            'name' => 'テスト太郎',
+            'email' => 'test@example.com',
             'password' => Hash::make('password123'),
             'is_admin' => 0,
         ]);
 
-        User::create([
-            'name' => '一般ユーザー2',
-            'email' => 'user2@example.com',
-            'password' => Hash::make('password123'),
-            'is_admin' => 0,
-        ]);
-
-        User::create([
-            'name' => '一般ユーザー3',
-            'email' => 'user3@example.com',
-            'password' => Hash::make('password123'),
-            'is_admin' => 0,
-        ]);
+        User::factory()->count(9)->create();
     }
 }
