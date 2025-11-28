@@ -96,7 +96,7 @@
 
 .attendance-detail__comment {
     margin-left: 28px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: bold;
 }
 
@@ -118,8 +118,11 @@
 
 .approved-btn {
     background-color: #696969;
+    cursor: default;
+    pointer-events: none;
 }
 
 .approve-btn {
     background-color: #000;
 }
+
