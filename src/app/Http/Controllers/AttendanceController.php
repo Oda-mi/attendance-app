@@ -179,15 +179,15 @@ class AttendanceController extends Controller
         $today = Carbon::today()->toDateString();
 
         $request->validate([
-            'year' => ['nullable', 'integer', 'min:2000', 'max:2100'],
+            'year'  => ['nullable', 'integer', 'min:2000', 'max:2100'],
             'month' => ['nullable', 'integer', 'min:1', 'max:12'],
         ]);
 
-        $year = $request->input('year', Carbon::parse($today)->year);
+        $year  = $request->input('year', Carbon::parse($today)->year);
         $month = $request->input('month', Carbon::parse($today)->month);
 
         $start = Carbon::createFromDate($year, $month, 1);
-        $end = $start->copy()->endOfMonth();
+        $end   = $start->copy()->endOfMonth();
 
         $attendances = Attendance::with('breaks')
                                 ->where('user_id', $user->id)
@@ -279,11 +279,11 @@ class AttendanceController extends Controller
             $work_date = $request->input('date') ?? now()->format('Y-m-d');
 
             $attendanceData = new Attendance([
-                'id' => 0,
-                'user_id' => $user->id,
-                'work_date' => $work_date,
+                'id'         => 0,
+                'user_id'    => $user->id,
+                'work_date'  => $work_date,
                 'start_time' => null,
-                'end_time' => null,
+                'end_time'   => null,
             ]);
 
             $breaks = collect();
@@ -330,6 +330,7 @@ class AttendanceController extends Controller
                 );
             } else {
                 $attendance = Attendance::findOrFail($attendanceId);
+
                 if ($attendance->user_id !== $user->id) {
                     abort(403);
                 }
@@ -337,28 +338,31 @@ class AttendanceController extends Controller
             }
 
             $breakStarts = $request->input('break_start', []);
-            $breakEnds = $request->input('break_end', []);
-            $breaks = [];
+            $breakEnds   = $request->input('break_end', []);
+            $breaks      = [];
 
             foreach ($breakStarts as $index => $start) {
+
                 $start = trim($start ?? '');
-                $end = trim($breakEnds[$index] ?? '');
+                $end   = trim($breakEnds[$index] ?? '');
+
                 if ($start === '' && $end === '') continue;
+
                 $breaks[] = [
                     'start_time' => $start ?: null,
-                    'end_time' => $end ?: null
+                    'end_time'   => $end ?: null
                 ];
             }
 
             AttendanceUpdateRequest::create([
-                'user_id' => $user->id,
+                'user_id'       => $user->id,
                 'attendance_id' => $attendance->id,
-                'work_date' => $workDate,
-                'start_time' => $validated['start_time'],
-                'end_time' => $validated['end_time'],
-                'breaks' => $breaks,
-                'note' => $validated['note'],
-                'status' => $validated['status'],
+                'work_date'     => $workDate,
+                'start_time'    => $validated['start_time'],
+                'end_time'      => $validated['end_time'],
+                'breaks'        => $breaks,
+                'note'          => $validated['note'],
+                'status'        => $validated['status'],
             ]);
         });
 
