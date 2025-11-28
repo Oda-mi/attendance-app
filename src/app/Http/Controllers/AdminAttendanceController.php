@@ -100,11 +100,11 @@ class AdminAttendanceController extends Controller
             $user = User::findOrFail($request->input('user_id'));
 
             $attendanceData = new Attendance([
-                'id' => 0,
-                'work_date' => $work_date,
-                'user_id' => $user->id,
+                'id'         => 0,
+                'work_date'  => $work_date,
+                'user_id'    => $user->id,
                 'start_time' => null,
-                'end_time' => null,
+                'end_time'   => null,
             ]);
 
             $breaks = collect();
@@ -152,15 +152,15 @@ class AdminAttendanceController extends Controller
         $today = Carbon::today()->toDateString();
 
         $request->validate([
-            'year' => ['nullable', 'integer', 'min:2000', 'max:2100'],
+            'year'  => ['nullable', 'integer', 'min:2000', 'max:2100'],
             'month' => ['nullable', 'integer', 'min:1', 'max:12'],
         ]);
 
-        $year = $request->input('year', Carbon::parse($today)->year);
+        $year  = $request->input('year', Carbon::parse($today)->year);
         $month = $request->input('month', Carbon::parse($today)->month);
 
         $start = Carbon::createFromDate($year, $month, 1);
-        $end = $start->copy()->endOfMonth();
+        $end   = $start->copy()->endOfMonth();
 
         $attendances = Attendance::with('breaks')
                         ->where('user_id', $user->id)
@@ -210,18 +210,28 @@ class AdminAttendanceController extends Controller
         $validated = $request->validated();
 
         $attendanceId = (int) $request->input('attendanceId', 0);
-        $userId = (int) $request->input('user_id'); // hidden で送ってきたやつ
+        $userId = (int) $request->input('user_id');
         $workDate = $request->input('work_date');
 
         DB::transaction(function () use ($attendanceId, $userId, $workDate, $validated, $request, &$attendance) {
+
+            $workDate = Carbon::parse($request->input('work_date'))->format('Y-m-d');
+
+            $startTime = $validated['start_time']
+                        ? $workDate . ' ' . $validated['start_time']
+                        : null;
+
+            $endTime = $validated['end_time']
+                        ? $workDate . ' ' . $validated['end_time']
+                        : null;
 
             if ($attendanceId === 0) {
 
                 $attendance = Attendance::create([
                     'user_id'    => $userId,
                     'work_date'  => $workDate,
-                    'start_time' => $validated['start_time'],
-                    'end_time'   => $validated['end_time'],
+                    'start_time' => $startTime,
+                    'end_time'   => $endTime,
                     'note'       => $validated['note'],
                 ]);
             } else {
@@ -229,8 +239,8 @@ class AdminAttendanceController extends Controller
                 $attendance = Attendance::findOrFail($attendanceId);
 
                 $attendance->update([
-                    'start_time' => $validated['start_time'],
-                    'end_time'   => $validated['end_time'],
+                    'start_time' => $startTime,
+                    'end_time'   => $endTime,
                     'note'       => $validated['note'],
                 ]);
             }
@@ -240,17 +250,18 @@ class AdminAttendanceController extends Controller
             $breakStarts = $request->input('break_start', []);
             $breakEnds   = $request->input('break_end', []);
 
-            $workDate = Carbon::parse($attendance->work_date)->format('Y-m-d');
+            $workDateForBreak = Carbon::parse($attendance->work_date)->format('Y-m-d');
 
             foreach ($breakStarts as $index => $start) {
+
                 $start = trim($start ?? '');
-                $end = trim($breakEnds[$index] ?? '');
+                $end   = trim($breakEnds[$index] ?? '');
 
                 if ($start === '' && $end === '') continue;
 
                 $attendance->breaks()->create([
-                    'start_time' => $start ? $workDate.' '.$start : null,
-                    'end_time'   => $end   ? $workDate.' '.$end   : null,
+                    'start_time' => $start ? $workDateForBreak.' '.$start : null,
+                    'end_time'   => $end   ? $workDateForBreak.' '.$end   : null,
                 ]);
             }
         });
