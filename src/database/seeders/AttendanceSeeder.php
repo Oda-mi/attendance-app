@@ -19,32 +19,39 @@ class AttendanceSeeder extends Seeder
         $users = User::where('is_admin', 0)->get();
 
         $startDate = Carbon::now()->subDays(30);
-        $endDate   =  Carbon::today();
+        $endDate   = Carbon::today();
 
         foreach ($users as $user) {
             $date = $startDate->copy();
 
-             // ランダムで休日作成
             $allDates = [];
+            $weekendDates = [];
+
+            $date = $startDate->copy();
+
             while ($date->lte($endDate)) {
                 $allDates[] = $date->copy();
+
+                if (in_array($date->dayOfWeek, [Carbon::SATURDAY, Carbon::SUNDAY])) {
+                    $weekendDates[] = $date->copy();
+                }
+
                 $date->addDay();
             }
 
-            $holidayDates = collect($allDates)->random(min(8, count($allDates)));
-
             foreach ($allDates as $date) {
 
-                // 休日はスキップ
-                if ($holidayDates->contains($date)) continue;
+                if (collect($weekendDates)->contains(function ($weekendDate) use ($date) {
+                    return $weekendDate->isSameDay($date);
+                })) {
+                    continue;
+                }
 
-                // 勤怠レコード作成
                 $attendance = Attendance::factory()->create([
                     'user_id'   => $user->id,
                     'work_date' => $date->toDateString(),
                 ]);
 
-                // 休憩データ
                 $breakStart = Carbon::parse($attendance->start_time)->addHours(rand(3,4));
                 $breakEnd   = (clone $breakStart)->addMinutes(60);
 
