@@ -51,7 +51,7 @@ class AdminAttendanceController extends Controller
 
 
 
-    public function detail(Request $request, $id = null)
+    public function adminAttendanceDetail(Request $request, $id = null)
     {
         $admin = auth()->user();
 

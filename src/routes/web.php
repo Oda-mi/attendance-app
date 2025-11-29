@@ -41,13 +41,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/attendance/end_break', [AttendanceController::class, 'endBreak'])->name('attendance.end_break');
     Route::post('/attendance/end', [AttendanceController::class, 'endWork'])->name('attendance.end');
 
-    Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
+    Route::get('/attendance/list', [AttendanceController::class, 'attendanceList'])->name('attendance.list');
 
-    Route::get('/attendance/detail/{id?}', [AttendanceController::class, 'detail'])->whereNumber('id')->name('attendance.detail');
+    Route::get('/attendance/detail/{id?}', [AttendanceController::class, 'attendanceDetail'])->whereNumber('id')->name('attendance.detail');
 
     Route::post('/attendance/update-request', [AttendanceController::class, 'storeUpdateRequest'])->name('attendance.update_request');
 
-    Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'index'])->name('stamp_correction_request.list');
+    Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'requestList'])->name('stamp_correction_request.list');
 
 });
 
@@ -71,7 +71,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'dailyList'])->name('admin.attendance.list');
 
-    Route::get('/admin/attendance/{id}', [AdminAttendanceController::class, 'detail'])->whereNumber('id')->name('admin.attendance.detail');
+    Route::get('/admin/attendance/{id}', [AdminAttendanceController::class, 'adminAttendanceDetail'])->whereNumber('id')->name('admin.attendance.detail');
 
     Route::post('/admin/attendance/upsert', [AdminAttendanceController::class, 'upsertAttendance'])->name('admin.attendance.upsert');
 

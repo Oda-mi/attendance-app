@@ -168,7 +168,7 @@ class AttendanceController extends Controller
 
 
 
-    public function list(Request $request)
+    public function attendanceList(Request $request)
     {
         $user = auth()->user();
 
@@ -229,7 +229,7 @@ class AttendanceController extends Controller
 
 
 
-    public function detail(Request $request, $id = null)
+    public function attendanceDetail(Request $request, $id = null)
     {
         $user = auth()->user();
 

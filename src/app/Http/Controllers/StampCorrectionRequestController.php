@@ -7,10 +7,10 @@ use App\Models\AttendanceUpdateRequest;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class StampCorrectionRequestController extends Controller
+class stampCorrectionRequestController extends Controller
 {
 
-    public function index()
+    public function requestList()
     {
         $user = auth()->user();
 
@@ -126,7 +126,7 @@ class StampCorrectionRequestController extends Controller
             }
         });
 
-        return redirect()->route('stamp_correction_request.showApproveForm', ['attendance_correct_request_id' => $requestData->id]);
+        return redirect()->route('attendance_correction_request.showApproveForm', ['attendance_correct_request_id' => $requestData->id]);
 
     }
 
