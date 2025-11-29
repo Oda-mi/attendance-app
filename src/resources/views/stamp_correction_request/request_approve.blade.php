@@ -61,7 +61,9 @@ use Carbon\Carbon;
                             <div class="start_time">
                                 {{ $break['start_time'] ? Carbon::parse($break['start_time'])->format('H:i') : '' }}
                             </div>
-                            <span>～</span>
+                            @if($break['start_time'] || $break['end_time'])
+                                <span>～</span>
+                            @endif
                             <div>
                                 {{ $break['end_time'] ? Carbon::parse($break['end_time'])->format('H:i') : '' }}
                             </div>
