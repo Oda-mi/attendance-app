@@ -65,6 +65,11 @@ class StampCorrectionRequestController extends Controller
 
         $breaks = $requestData->breaks ?? [];
 
+        $breaks[] = [
+            'start_time' => null,
+            'end_time' => null,
+        ];
+
         return view('stamp_correction_request.request_approve', compact(
             'requestData',
             'breaks'
