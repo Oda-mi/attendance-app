@@ -232,6 +232,7 @@ class AdminAttendanceController extends Controller
                     'work_date'  => $workDate,
                     'start_time' => $startTime,
                     'end_time'   => $endTime,
+                    'status'     => 'after_work',
                     'note'       => $validated['note'],
                 ]);
             } else {
