@@ -73,7 +73,7 @@ use Carbon\Carbon;
                     <th>備考</th>
                     <td colspan="3">
                         <div class="attendance-detail__comment">
-                            {{ $requestData->note }}
+                            {!! nl2br(e($requestData->note)) !!}
                         </div>
                     </td>
                 </tr>

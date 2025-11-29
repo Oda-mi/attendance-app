@@ -173,7 +173,7 @@ use Carbon\Carbon;
                         <textarea  name="note" class="attendance-detail__textarea">{{ old('note', $attendanceData->note) }}</textarea>
                         @else
                         <div class="attendance-detail__textarea--pending">
-                            {{ $attendanceData->note }}
+                            {!! nl2br(e($attendanceData->note)) !!}
                         </div>
                         @endif
                         <div class="attendance-form__error">
