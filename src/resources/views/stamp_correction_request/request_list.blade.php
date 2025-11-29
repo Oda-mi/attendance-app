@@ -43,7 +43,7 @@ use Carbon\Carbon;
                     <td>承認待ち</td>
                     <td>{{ $request->user->name }}</td>
                     <td>{{ Carbon::parse($request->work_date)->format('Y/m/d') }}</td>
-                    <td>{{ $request->note }}</td>
+                    <td class="note-column">{{ $request->note }}</td>
                     <td>{{ Carbon::parse($request->created_at)->format('Y/m/d') }}</td>
                     <td>
                         @if(auth()->user()->is_admin)
@@ -75,7 +75,7 @@ use Carbon\Carbon;
                     <td>承認済み</td>
                     <td>{{ $request->user->name }}</td>
                     <td>{{ Carbon::parse($request->work_date)->format('Y/m/d') }}</td>
-                    <td>{{ $request->note }}</td>
+                    <td class="note-column">{{ $request->note }}</td>
                     <td>{{ Carbon::parse($request->created_at)->format('Y/m/d') }}</td>
                     <td>
                         @if (auth()->user()->is_admin)
