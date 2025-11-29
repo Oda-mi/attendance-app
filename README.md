@@ -175,7 +175,7 @@ php artisan test tests/Feature/FleaMarketAppTest.php
 
 
 ## ER図
-![ER図](AtttendanceApp_ER.png)
+![ER図](AttendanceApp_ER.png)
 
 
 ## URL (開発環境)
