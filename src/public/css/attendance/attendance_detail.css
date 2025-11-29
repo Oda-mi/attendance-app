@@ -46,6 +46,7 @@
     text-align: left;
     font-size: 16px;
     font-weight: bold;
+    vertical-align: middle;
 }
 
 .attendance-detail__table tr:last-child td {
@@ -106,6 +107,17 @@
     margin-top: 20px;
 }
 
+.attendance-detail__pending {
+    width: 100px;
+    height: 30px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: bold;
+}
+
 .attendance-detail__textarea {
     width: 320px;
     height: 80px;
@@ -116,6 +128,22 @@
     font-weight: bold;
     font-family: inherit;
 }
+
+.attendance-detail__textarea--pending {
+    margin-top: 20px;
+    margin-left: 28px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.attendance-form__error {
+    margin-top: 5px;
+    height: 20px;
+    color: #ff0000;
+    font-size: 15px;
+    text-align: left;
+}
+
 
 .attendance-detail__button {
     display: flex;
@@ -134,14 +162,6 @@
     font-family: inherit;
 }
 
-.attendance-form__error {
-    margin-top: 5px;
-    height: 20px;
-    color: #ff0000;
-    font-size: 15px;
-    text-align: left;
-}
-
 .attendance-detail__message {
     display: flex;
     justify-content: flex-end;
@@ -154,26 +174,6 @@
     color: #FF000080;
 }
 
-.attendance-detail__pending {
-    width: 100px;
-    height: 30px;
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 17px;
-    font-weight: bold;
-}
 
-.attendance-detail__textarea--pending {
-    width: 320px;
-    height: 30px;
-    margin-top: 20px;
-    margin-left: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    font-size: 15px;
-    font-weight: bold;
-}
+
 

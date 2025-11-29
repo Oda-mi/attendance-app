@@ -79,6 +79,13 @@
     font-weight: bold;
 }
 
+.note-column {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .common-table__table tbody tr:last-child td {
     border-bottom: none;
 }
