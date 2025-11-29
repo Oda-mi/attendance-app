@@ -320,12 +320,13 @@ class AttendanceController extends Controller
                 $workDate = $request->input('work_date') ?? now()->format('Y-m-d');
                 $attendance = Attendance::firstOrCreate(
                     [
-                        'user_id' => $user->id,
+                        'user_id'   => $user->id,
                         'work_date' => $workDate,
                     ],
                     [
                         'start_time' => null,
-                        'end_time' => null,
+                        'end_time'   => null,
+                        'status'    => 'after_work',
                     ]
                 );
             } else {
