@@ -6,3 +6,5 @@ docker/mysql/data/
 
 /MailHog_windows_amd64.exe
 /src/.env.testing
+
+src/public/images/arrow.svg
