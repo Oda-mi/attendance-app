@@ -204,6 +204,90 @@ class AdminAttendanceController extends Controller
 
 
 
+    public function export(Request $request)
+    {
+        $admin = auth()->user();
+
+        if (!$admin->is_admin) {
+            abort(403, 'アクセス権限がありません。');
+        }
+
+        $request->validate([
+            'user_id' => 'required|integer',
+            'year'    => 'required|integer|min:2000|max:2100',
+            'month'   => 'required|integer|min:1|max:12',
+        ]);
+
+        $userId = $request->input('user_id');
+        $year   = $request->input('year');
+        $month  = $request->input('month');
+
+        $user = User::findOrFail($userId);
+
+        $attendances = Attendance::with('breaks')
+                                ->where('user_id', $userId)
+                                ->whereYear('work_date', $year)
+                                ->whereMonth('work_date', $month)
+                                ->orderBy('work_date', 'asc')
+                                ->get();
+
+        $csvHeader = [
+            '日付',
+            '出勤時刻',
+            '退勤時刻',
+            '休憩時間（合計）',
+            '勤務時間（合計）',
+        ];
+
+        $csvFileName = "attendance_{$user->name}_{$year}-{$month}.csv";
+
+        $handle = fopen('php://temp', 'r+');
+
+        fwrite($handle, "\xEF\xBB\xBF");
+
+        fputcsv($handle, $csvHeader);
+
+        foreach($attendances as $attendance) {
+
+            $date = Carbon::parse($attendance->work_date)->format('Y-m-d');
+            $date = "'" . $date;
+
+            $start = $attendance->start_time
+                ? Carbon::parse($attendance->start_time)->format('H:i')
+                : '';
+
+            $end = $attendance->end_time
+                ? Carbon::parse($attendance->end_time)->format('H:i')
+                : '';
+
+            $break = $attendance->breakTotal
+                ? gmdate('H:i', $attendance->breakTotal)
+                : '';
+
+            $work = $attendance->workTotal
+                ? gmdate('H:i', $attendance->workTotal)
+                : '';
+
+            fputcsv($handle, [
+                $date,
+                $start,
+                $end,
+                $break,
+                $work,
+            ]);
+        }
+
+        rewind($handle);
+        $csv = stream_get_contents($handle);
+        fclose($handle);
+
+        return response($csv)
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', "attachment; filename={$csvFileName}");
+    }
+
+
+
     public function upsertAttendance(AttendanceUpdateRequestForm $request)
     {
         $admin = auth()->user();

@@ -98,7 +98,13 @@ use Carbon\Carbon;
         </table>
     </div>
     <div class="attendance__button">
-        <button>CSV出力</button>
+        <form action="{{ route('admin.attendance.export') }}" method="post">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ $user->id }}">
+            <input type="hidden" name="year" value="{{ $prevMonth->copy()->addMonth()->year }}">
+            <input type="hidden" name="month" value="{{ $prevMonth->copy()->addMonth()->month }}">
+            <button type="submit">CSV出力</button>
+        </form>
     </div>
 </div>
 
