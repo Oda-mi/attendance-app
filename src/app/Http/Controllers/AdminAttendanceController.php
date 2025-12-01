@@ -26,7 +26,7 @@ class AdminAttendanceController extends Controller
         $today = Carbon::today()->toDateString();
 
         $request->validate([
-            'date' => ['nullable', 'date_format:Y-m-d'],
+            'date' => 'nullable|date_format:Y-m-d',
         ]);
 
         $dateString = $request->input('date', $today);
@@ -152,8 +152,8 @@ class AdminAttendanceController extends Controller
         $today = Carbon::today()->toDateString();
 
         $request->validate([
-            'year'  => ['nullable', 'integer', 'min:2000', 'max:2100'],
-            'month' => ['nullable', 'integer', 'min:1', 'max:12'],
+            'year'  => 'nullable|integer|min:2000|max:2100',
+            'month' => 'nullable|integer|min:1|max:12',
         ]);
 
         $year  = $request->input('year', Carbon::parse($today)->year);
