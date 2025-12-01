@@ -3,3 +3,5 @@
 /storage/
 /.env
 docker/mysql/data/
+
+/MailHog_windows_amd64.exe
