@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminAttendanceController;
 
 
 
+
 /*
 |--------------------------------------------------------------------------
 | 一般ユーザー（ログイン前）
@@ -17,10 +18,6 @@ use App\Http\Controllers\AdminAttendanceController;
 
 
 
-Route::get('/verify-email', function () {
-    return view('auth.verify-email');
-})->name('verification.send');
-
 /*
 |--------------------------------------------------------------------------
 | 一般ユーザー（ログイン後）
@@ -28,6 +25,11 @@ Route::get('/verify-email', function () {
 */
 
 Route::middleware(['auth'])->group(function () {
+
+    Route::get('/email/verify', function () {
+        return view ('auth.verify-email');
+    })->name('verification.notice');
+
 
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
 

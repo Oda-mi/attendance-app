@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Contracts\LoginResponse;
+use Laravel\Fortify\Contracts\RegisterResponse;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -62,6 +63,18 @@ class FortifyServiceProvider extends ServiceProvider
             return view('auth.login');
         });
 
+        Fortify::verifyEmailView(function () {
+            return view('auth.verify-email');
+        });
+
+        $this->app->instance(RegisterResponse::class, new class implements RegisterResponse {
+            public function toResponse($request)
+            {
+                return redirect()->route('verification.notice');
+            }
+        });
+
+
         Fortify::authenticateUsing(function (Request $request) {
             $user = User::where('email', $request->email)->first();
 
@@ -93,6 +106,10 @@ class FortifyServiceProvider extends ServiceProvider
             public function toResponse($request)
             {
                 $user = Auth::user();
+
+                if (! $user->is_admin && !$user->hasVerifiedEmail()) {
+                    return redirect()->route('verification.notice');
+                }
 
                 if ($user->is_admin) {
                     return redirect()->route('admin.attendance.list');;
