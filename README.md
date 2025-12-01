@@ -68,6 +68,14 @@ php artisan db:seed
 
 ※シーダー実行で自動的に作成されます
 
+
+## 開発用 Laravel サーバー自動起動について
+- Docker コンテナ起動時に php コンテナで自動的に Laravel 開発サーバー（php artisan serve）が立ち上がります
+- 手動で `php artisan serve` を実行する必要はありません
+- ブラウザで以下の URL にアクセスしてください
+  - http://localhost:8000/attendance
+
+
 ## メール認証機能について
 MailHog を使用して開発環境でメール認証を確認します
 
@@ -92,11 +100,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 
 
 ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※
-## 開発用 Laravel サーバー自動起動について
-- Docker コンテナ起動時に php コンテナで自動的に Laravel 開発サーバー（php artisan serve）が立ち上がります
-- 手動で `php artisan serve` を実行する必要はありません
-- ブラウザで以下の URL にアクセスしてください
-  - http://localhost:8000
+
 
 
 
