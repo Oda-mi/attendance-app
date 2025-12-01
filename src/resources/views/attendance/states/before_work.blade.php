@@ -1,8 +1,8 @@
 @extends('layouts.auth')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/attendance/states/attendance_base.css') }}">
-<link rel="stylesheet" href="{{ asset('css/attendance/states/attendance_before_work.css') }}">
+<link rel="stylesheet" href="{{ asset('css/attendance/states/status_common.css') }}">
+<link rel="stylesheet" href="{{ asset('css/attendance/states/before_work.css') }}">
 
 @section('content')
 
