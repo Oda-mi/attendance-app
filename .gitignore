@@ -8,3 +8,4 @@ docker/mysql/data/
 /src/.env.testing
 
 src/public/images/arrow.svg
+src/tests/Feature/ExampleTest.php
