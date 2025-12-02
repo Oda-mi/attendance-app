@@ -68,7 +68,7 @@ use Carbon\Carbon;
                     <td>{{ $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '' }}</td>
                     <td>{{ $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '' }}</td>
                     <td>
-                        @if($attendance->start_time && $attendance->end_time)
+                        @if($attendance->breaks && $attendance->breaks->count())
                             {{ gmdate('H:i', $attendance->breakTotal ?? 0) }}
                         @else
                             {{-- 出勤・退勤の両方がない場合、または退勤していない場合は空白 --}}
