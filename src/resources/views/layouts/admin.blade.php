@@ -19,7 +19,7 @@
         </div>
         <div class="header__nav">
             <ul class="header__buttons">
-                <li><a href="{{ route('admin.attendance.list') }}" class="button">勤怠一覧</a></li>
+                <li><a href="{{ route('admin.attendance.daily_list') }}" class="button">勤怠一覧</a></li>
                 <li><a href="{{ route('admin.staff.list') }}" class="button">スタッフ一覧</a></li>
                 <li><a href="{{ route('stamp_correction_request.list') }}" class="button">申請一覧</a></li>
                 <li>

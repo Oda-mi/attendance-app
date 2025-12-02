@@ -2,7 +2,7 @@
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/layouts/common_table.css') }}">
-<link rel="stylesheet" href="{{ asset('css/admin/attendance/admin_attendance_staff.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin/attendance/monthly_list.css') }}">
 @endsection
 
 @section('content')
@@ -19,7 +19,7 @@ use Carbon\Carbon;
         </h1>
     </div>
     <div class="common-table__nav">
-        <a href="{{ route('admin.attendance.staff',[
+        <a href="{{ route('admin.attendance.monthly_list',[
             'id' => $user->id,
             'year' => $prevMonth->year,
             'month' => $prevMonth->month
@@ -40,7 +40,7 @@ use Carbon\Carbon;
             <img src="/images/calendar.svg" class="calendar-icon">
             {{ $displayMonth }}
         </span>
-        <a href="{{ route('admin.attendance.staff', [
+        <a href="{{ route('admin.attendance.monthly_list', [
             'id' => $user->id,
             'year' => $nextMonth->year,
             'month' => $nextMonth->month

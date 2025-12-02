@@ -18,7 +18,7 @@ use Carbon\Carbon;
         </h1>
     </div>
     <div class="common-table__nav">
-        <a href="{{ route('admin.attendance.list',  ['date' => $prevDate]) }}">
+        <a href="{{ route('admin.attendance.daily_list',  ['date' => $prevDate]) }}">
             <svg class="arrow-icon common-table__arrow-left" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 161 120" preserveAspectRatio="xMidYMid meet">
                 <g transform="translate(0,120) scale(0.1,-0.1)" stroke="none">
@@ -35,7 +35,7 @@ use Carbon\Carbon;
             <img src="/images/calendar.svg" class="calendar-icon">
             {{ $attendanceDate->format('Y/m/d') }}
         </span>
-        <a href="{{ route('admin.attendance.list', ['date' => $nextDate]) }}">
+        <a href="{{ route('admin.attendance.daily_list', ['date' => $nextDate]) }}">
             翌日
             <svg class="arrow-icon common-table__arrow-right" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 161 120" preserveAspectRatio="xMidYMid meet">
