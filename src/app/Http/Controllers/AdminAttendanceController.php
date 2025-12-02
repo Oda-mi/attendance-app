@@ -41,7 +41,7 @@ class AdminAttendanceController extends Controller
         $prevDate = $attendanceDate->copy()->subDay()->format('Y-m-d');
         $nextDate = $attendanceDate->copy()->addDay()->format('Y-m-d');
 
-        return view('admin.attendance.admin_attendance_list', compact(
+        return view('admin.attendance.daily_list', compact(
             'attendanceDate',
             'attendances',
             'prevDate',
@@ -113,7 +113,7 @@ class AdminAttendanceController extends Controller
 
         $layout = 'layouts.admin';
 
-        return view('attendance.attendance_detail', compact(
+        return view('attendance.detail', compact(
             'user',
             'attendanceData',
             'breaks',
@@ -134,7 +134,7 @@ class AdminAttendanceController extends Controller
 
         $staffs = User::where('is_admin', 0)->get();
 
-        return view('admin.staff.admin_staff_list', compact('staffs'));
+        return view('admin.staff.staff_list', compact('staffs'));
     }
 
 
@@ -193,7 +193,7 @@ class AdminAttendanceController extends Controller
             ];
         });
 
-        return view('admin.attendance.admin_attendance_staff', compact(
+        return view('admin.attendance.monthly_list', compact(
             'user',
             'attendanceDays',
             'displayMonth',

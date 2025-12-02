@@ -9,18 +9,9 @@ use App\Http\Controllers\AdminAttendanceController;
 
 
 
-
 /*
 |--------------------------------------------------------------------------
-| 一般ユーザー（ログイン前）
-|--------------------------------------------------------------------------
-*/
-
-
-
-/*
-|--------------------------------------------------------------------------
-| 一般ユーザー（ログイン後）
+| 一般ユーザー
 |--------------------------------------------------------------------------
 */
 
@@ -33,10 +24,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
 
-    Route::view('/attendance/before-work', 'attendance.states.attendance_before_work')->name('attendance.before_work');
-    Route::view('/attendance/working', 'attendance.states.attendance_working')->name('attendance.working');
-    Route::view('/attendance/on-break', 'attendance.states.attendance_on_break')->name('attendance.on_break');
-    Route::view('/attendance/after-work', 'attendance.states.attendance_after_work')->name('attendance.after_work');
+    Route::view('/attendance/before-work', 'attendance.states.before_work')->name('status.before_work');
+    Route::view('/attendance/working', 'attendance.states.working')->name('status.working');
+    Route::view('/attendance/on-break', 'attendance.states.on_break')->name('status.on_break');
+    Route::view('/attendance/after-work', 'attendance.states.after_work')->name('status.after_work');
 
     Route::post('/attendance/start', [AttendanceController::class, 'startWork'])->name('attendance.start');
     Route::post('/attendance/start_break', [AttendanceController::class, 'startBreak'])->name('attendance.start_break');
@@ -71,7 +62,7 @@ Route::post('/admin/login', [AuthenticatedSessionController::class, 'store'])->n
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'dailyList'])->name('admin.attendance.list');
+    Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'dailyList'])->name('admin.attendance.daily_list');
 
     Route::get('/admin/attendance/{id}', [AdminAttendanceController::class, 'adminAttendanceDetail'])->whereNumber('id')->name('admin.attendance.detail');
 
@@ -79,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/admin/staff/list', [AdminAttendanceController::class, 'staffList'])->name('admin.staff.list');
 
-    Route::get('/admin/staff/{id}', [AdminAttendanceController::class, 'staffMonthlyList'])->whereNumber('id')->name('admin.attendance.staff');
+    Route::get('/admin/staff/{id}', [AdminAttendanceController::class, 'staffMonthlyList'])->whereNumber('id')->name('admin.attendance.monthly_list');
 
     Route::post('/admin/export', [AdminAttendanceController::class, 'export'])->name('admin.attendance.export');
 

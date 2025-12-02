@@ -32,18 +32,18 @@ class AttendanceController extends Controller
                                 ->first();
 
         if (!$attendance) {
-            return view('attendance.states.attendance_before_work');
+            return view('attendance.states.before_work');
         }
 
         switch ($attendance->status) {
             case Attendance::STATUS_WORKING:
-                return redirect()->route('attendance.working');
+                return redirect()->route('status.working');
             case Attendance::STATUS_ON_BREAK:
-                return redirect()->route('attendance.on_break');
+                return redirect()->route('status.on_break');
             case Attendance::STATUS_AFTER_WORK:
-                return redirect()->route('attendance.after_work');
+                return redirect()->route('status.after_work');
             default:
-                return redirect()->route('attendance.before_work');
+                return redirect()->route('status.before_work');
         }
     }
 
@@ -72,7 +72,7 @@ class AttendanceController extends Controller
         $attendance->start_time = now();
         $attendance->save();
 
-        return redirect()->route('attendance.working');
+        return redirect()->route('status.working');
     }
 
 
@@ -100,7 +100,7 @@ class AttendanceController extends Controller
         $attendance->status = Attendance::STATUS_ON_BREAK;
         $attendance->save();
 
-        return redirect()->route('attendance.on_break');
+        return redirect()->route('status.on_break');
     }
 
 
@@ -136,7 +136,7 @@ class AttendanceController extends Controller
         $attendance->status = Attendance::STATUS_WORKING;
         $attendance->save();
 
-        return redirect()->route('attendance.working');
+        return redirect()->route('status.working');
     }
 
 
@@ -163,7 +163,7 @@ class AttendanceController extends Controller
         $attendance->end_time = now();
         $attendance->save();
 
-        return redirect()->route('attendance.after_work');
+        return redirect()->route('status.after_work');
     }
 
 
@@ -219,7 +219,7 @@ class AttendanceController extends Controller
             ];
         });
 
-        return view('attendance.attendance_list', compact(
+        return view('attendance.list', compact(
             'attendanceDays',
             'displayMonth',
             'prevMonth',
@@ -294,7 +294,7 @@ class AttendanceController extends Controller
 
         $layout = 'layouts.auth';
 
-        return view('attendance.attendance_detail', compact(
+        return view('attendance.detail', compact(
             'user',
             'attendanceData',
             'breaks',

@@ -112,7 +112,7 @@ class FortifyServiceProvider extends ServiceProvider
                 }
 
                 if ($user->is_admin) {
-                    return redirect()->route('admin.attendance.list');;
+                    return redirect()->route('admin.attendance.daily_list');
                 }
 
                 return redirect()->route('attendance.index');
