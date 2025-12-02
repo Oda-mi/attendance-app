@@ -214,6 +214,7 @@ class AttendanceController extends Controller
                 'work_date'  => $date->format('Y-m-d'),
                 'start_time' => null,
                 'end_time'   => null,
+                'breaks'     => collect(),
                 'breakTotal' => 0,
                 'workTotal'  => 0,
             ];
