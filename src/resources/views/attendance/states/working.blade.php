@@ -3,6 +3,7 @@
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/attendance/states/status_common.css') }}">
 <link rel="stylesheet" href="{{ asset('css/attendance/states/working.css') }}">
+@endsection
 
 @section('content')
 
