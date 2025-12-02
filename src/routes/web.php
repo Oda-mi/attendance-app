@@ -51,7 +51,6 @@ Route::middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-// 管理者ログイン
 Route::get('/admin/login', function () {
     return view('admin.auth.admin_login');
 })->name('admin.login');
