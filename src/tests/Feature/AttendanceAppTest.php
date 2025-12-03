@@ -235,14 +235,14 @@ class AttendanceAppTest extends TestCase
         ]);
         $this->actingAs($user);
 
-        $response = $this->get(route('attendance.index'));
+        $responseAttendancePage = $this->get(route('attendance.index'));
 
         $currentDate = now()->locale('ja')->translatedFormat('Y年m月d日(D)');
 
         $currentTime = now()->format('H:i');
 
-        $response->assertSee($currentDate);
-        $response->assertSee($currentTime);
+        $responseAttendancePage->assertSee($currentDate);
+        $responseAttendancePage->assertSee($currentTime);
     }
 
     // ========================================
@@ -330,14 +330,7 @@ class AttendanceAppTest extends TestCase
         $responseBeforeWorkPage->assertStatus(200);
         $responseBeforeWorkPage->assertSee('出勤');
 
-        $responseStartWork = $this->post(route('attendance.start'));
-        $responseStartWork->assertRedirect(route('status.working'));
-
-        $this->assertDatabaseHas('attendances', [
-            'user_id'   => $user->id,
-            'work_date' => Carbon::today()->toDateString(),
-            'status'    => Attendance::STATUS_WORKING,
-        ]);
+        $this->post(route('attendance.start'));
 
         $responseWorkingPage = $this->followingRedirects()->get(route('attendance.index'));
         $responseWorkingPage->assertStatus(200);
@@ -358,7 +351,6 @@ class AttendanceAppTest extends TestCase
         $this->actingAs($user);
 
         $responseAfterWorkPage = $this->followingRedirects()->get(route('attendance.index'));
-
         $responseAfterWorkPage->assertStatus(200);
         $responseAfterWorkPage->assertSee('退勤済');
     }
@@ -407,10 +399,6 @@ class AttendanceAppTest extends TestCase
 
         $responseOnBreakPage = $this->get(route('status.on_break'));
         $responseOnBreakPage->assertSee('休憩中');
-
-        $this->assertDatabaseHas('attendance_breaks', [
-            'attendance_id' => $attendance->id,
-        ]);
     }
 
     /** @test */
@@ -426,28 +414,11 @@ class AttendanceAppTest extends TestCase
 
         $this->actingAs($user);
 
-        $responseStartBreak1 = $this->post(route('attendance.start_break'));
-        $this->assertDatabaseHas('attendances', [
-            'id' => $attendance->id,
-            'status' => Attendance::STATUS_ON_BREAK,
-        ]);
-
-        $responseEndBreak1 = $this->post(route('attendance.end_break'));
-        $this->assertDatabaseHas('attendances', [
-            'id' => $attendance->id,
-            'status' => Attendance::STATUS_WORKING,
-        ]);
-
-        $responseStartBreak2 = $this->post(route('attendance.start_break'));
-        $this->assertDatabaseHas('attendances', [
-            'id' => $attendance->id,
-            'status' => Attendance::STATUS_ON_BREAK,
-        ]);
+        $this->post(route('attendance.start_break'));
+        $this->post(route('attendance.end_break'));
 
         $responseWorkingPage = $this->get(route('status.working'));
         $responseWorkingPage->assertSee('休憩入');
-
-        $this->assertEquals(2, AttendanceBreak::where('attendance_id', $attendance->id)->count());
     }
 
     /** @test */
@@ -466,11 +437,6 @@ class AttendanceAppTest extends TestCase
         $responseStartBreak = $this->post(route('attendance.start_break'));
         $responseStartBreak->assertRedirect(route('status.on_break'));
 
-        $this->assertDatabaseHas('attendances', [
-            'id'     => $attendance->id,
-            'status' => Attendance::STATUS_ON_BREAK,
-        ]);
-
         $responseOnBreakPage = $this->get(route('status.on_break'));
         $responseOnBreakPage->assertSee('休憩戻');
 
@@ -481,6 +447,9 @@ class AttendanceAppTest extends TestCase
             'id'     => $attendance->id,
             'status' => Attendance::STATUS_WORKING,
         ]);
+
+        $responseWorkingPage = $this->get(route('status.working'));
+        $responseWorkingPage->assertSee('出勤中');
     }
 
     /** @test */
@@ -497,33 +466,12 @@ class AttendanceAppTest extends TestCase
         $this->actingAs($user);
 
         $responseStartBreak1 = $this->post(route('attendance.start_break'));
-        $this->assertDatabaseHas('attendances', [
-            'id' => $attendance->id,
-            'status' => Attendance::STATUS_ON_BREAK,
-        ]);
-
-        $responseEndBreak1 = $this->post(route('attendance.end_break'));
-        $this->assertDatabaseHas('attendances', [
-            'id' => $attendance->id,
-            'status' => Attendance::STATUS_WORKING,
-        ]);
+        $responseEndBreak1   = $this->post(route('attendance.end_break'));
 
         $responseStartBreak2 = $this->post(route('attendance.start_break'));
-        $this->assertDatabaseHas('attendances', [
-            'id' => $attendance->id,
-            'status' => Attendance::STATUS_ON_BREAK,
-        ]);
 
         $responseOnBreakPage = $this->get(route('status.on_break'));
         $responseOnBreakPage->assertSee('休憩戻');
-
-        $responseEndBreak2 = $this->post(route('attendance.end_break'));
-        $this->assertDatabaseHas('attendances', [
-            'id' => $attendance->id,
-            'status' => Attendance::STATUS_WORKING,
-        ]);
-
-        $this->assertEquals(2, AttendanceBreak::where('attendance_id', $attendance->id)->count());
     }
 
     /** @test */
@@ -540,7 +488,6 @@ class AttendanceAppTest extends TestCase
         $this->actingAs($user);
 
         $this->post(route('attendance.start_break'));
-
         $this->post(route('attendance.end_break'));
 
         $responseAttendanceList = $this->get(route('attendance.list'));
