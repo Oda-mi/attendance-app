@@ -12,6 +12,10 @@ use App\Models\AttendanceBreak;
 use App\Models\AttendanceUpdateRequest;
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\URL;
+
 class AttendanceAppTest extends TestCase
 {
     use RefreshDatabase;
@@ -1079,8 +1083,8 @@ class AttendanceAppTest extends TestCase
 
         $this->assertDatabaseHas('attendances', [
             'id'         => $attendanceData->id,
-            'start_time' => now()->format('Y-m-d') . ' 09:30:00',
-            'end_time'   => now()->format('Y-m-d') . ' 18:00:00',
+            'start_time' => Carbon::parse($attendanceData->work_date)->format('Y-m-d') . ' 09:30:00',
+            'end_time'   => Carbon::parse($attendanceData->work_date)->format('Y-m-d') . ' 18:00:00',
             'note'       => '出勤時間修正',
         ]);
 
@@ -1584,16 +1588,248 @@ class AttendanceAppTest extends TestCase
         $responseAttendanceDetailPage->assertStatus(200);
     }
 
+    // ========================================
+    // 15.勤怠情報修正機能（管理者）
+    // ========================================
+    /** @test */
+    public function 承認待ちの修正申請が全て表示されている()
+    {
+        $admin = User::factory()->create([
+            'is_admin' => 1,
+        ]);
+
+        $userA = User::factory()->create([
+            'is_admin' => 0,
+            'name'     => '一般ユーザーA'
+        ]);
+        $userB = User::factory()->create([
+            'is_admin' => 0,
+            'name'     => '一般ユーザーB'
+        ]);
+
+        $attendanceDataA = Attendance::factory()->create([
+            'user_id'    => $userA->id,
+            'work_date'  => now()->toDateString(),
+        ]);
+
+        $attendanceDataB = Attendance::factory()->create([
+            'user_id'    => $userB->id,
+            'work_date'  => now()->toDateString(),
+        ]);
+
+        AttendanceUpdateRequest::factory()->create([
+            'attendance_id' => $attendanceDataA->id,
+            'user_id'       => $userA->id,
+            'status'        => 'pending',
+        ]);
+
+        AttendanceUpdateRequest::factory()->create([
+            'attendance_id' => $attendanceDataB->id,
+            'user_id'       => $userB->id,
+            'status'        => 'pending',
+        ]);
+
+        $this->actingAs($admin);
+
+        $responseRequestListPage = $this->get(route('stamp_correction_request.list'));
+        $responseRequestListPage->assertStatus(200);
+
+        $responseRequestListPage->assertViewHas('pendingRequests', function ($pendingRequests) {
+            return $pendingRequests->every(fn($request) => $request->status === 'pending');
+        });
+
+        $responseRequestListPage->assertSee('一般ユーザーA');
+        $responseRequestListPage->assertSee('一般ユーザーB');
+    }
+
+    /** @test */
+    public function 承認済みの修正申請が全て表示されている()
+    {
+        $admin = User::factory()->create([
+            'is_admin' => 1,
+        ]);
+
+        $userA = User::factory()->create([
+            'is_admin' => 0,
+            'name'     => '一般ユーザーA'
+        ]);
+        $userB = User::factory()->create([
+            'is_admin' => 0,
+            'name'     => '一般ユーザーB'
+        ]);
+
+        $attendanceDataA = Attendance::factory()->create([
+            'user_id'    => $userA->id,
+            'work_date'  => now()->toDateString(),
+        ]);
+
+        $attendanceDataB = Attendance::factory()->create([
+            'user_id'    => $userB->id,
+            'work_date'  => now()->toDateString(),
+        ]);
+
+        AttendanceUpdateRequest::factory()->create([
+            'attendance_id' => $attendanceDataA->id,
+            'user_id'       => $userA->id,
+            'status'        => 'approved',
+        ]);
+
+        AttendanceUpdateRequest::factory()->create([
+            'attendance_id' => $attendanceDataB->id,
+            'user_id'       => $userB->id,
+            'status'        => 'approved',
+        ]);
+
+        $this->actingAs($admin);
+
+        $responseRequestListPage = $this->get(route('stamp_correction_request.list'));
+        $responseRequestListPage->assertStatus(200);
+
+        $responseRequestListPage->assertViewHas('approvedRequests', function ($approvedRequests) {
+            return $approvedRequests->every(fn($request) => $request->status === 'approved');
+        });
+
+        $responseRequestListPage->assertSee('一般ユーザーA');
+        $responseRequestListPage->assertSee('一般ユーザーB');
+    }
+
+    /** @test */
+    public function 修正申請の詳細内容が正しく表示されている()
+    {
+        $admin = User::factory()->create([
+            'is_admin' => 1,
+        ]);
+
+        $user = User::factory()->create([
+            'is_admin' => 0,
+            'name'     => 'テスト太郎'
+        ]);
+
+        $attendanceData = Attendance::factory()->create([
+            'user_id'    => $user->id,
+            'work_date'  => now()->toDateString(),
+        ]);
 
 
+        $requestData = AttendanceUpdateRequest::factory()->create([
+            'attendance_id' => $attendanceData->id,
+            'user_id'       => $user->id,
+            'start_time'   => '09:30',
+            'end_time'     => '18:00',
+            'note'         => '出勤時間修正',
+        ]);
 
+        $this->actingAs($admin);
 
+        $responseRequestDetailPage = $this->get(route('stamp_correction_request.showApproveForm', [
+            'attendance_correct_request_id' => $requestData->id]));
+        $responseRequestDetailPage->assertStatus(200);
 
+        $responseRequestDetailPage->assertSee($user->name);
+        $responseRequestDetailPage->assertSee(Carbon::parse($requestData->start_time)->format('H:i'));
+        $responseRequestDetailPage->assertSee(Carbon::parse($requestData->end_time)->format('H:i'));
+        $responseRequestDetailPage->assertSee($requestData->note);
+    }
 
+    /** @test */
+    public function 修正申請の承認処理が正しく行われる()
+    {
+        $admin = User::factory()->create([
+            'is_admin' => 1,
+        ]);
 
+        $user = User::factory()->create([
+            'is_admin' => 0,
+            'name'     => 'テスト太郎'
+        ]);
 
+        $attendanceData = Attendance::factory()->create([
+            'user_id'    => $user->id,
+            'start_time'   => '09:00',
+            'end_time'     => '18:00',
+            'work_date'  => now()->toDateString(),
+        ]);
 
+        $requestData = AttendanceUpdateRequest::factory()->create([
+            'attendance_id' => $attendanceData->id,
+            'user_id'       => $user->id,
+            'start_time'   => '09:30',
+            'end_time'     => '18:00',
+            'note'         => '出勤時間修正',
+        ]);
 
+        $this->actingAs($admin);
 
+        $responseApproveFormPage = $this->get(route('stamp_correction_request.showApproveForm', [
+            'attendance_correct_request_id' => $requestData->id]));
+        $responseApproveFormPage->assertStatus(200);
+
+        $responseApprove = $this->post(route('stamp_correction_request.approve', [
+            'attendance_correct_request_id'=>$requestData->id]));
+
+        $this->assertDatabaseHas('attendances', [
+            'id'         => $attendanceData->id,
+            'user_id'    => $user->id,
+            'start_time' => Carbon::parse($attendanceData->work_date)->format('Y-m-d') . ' 09:30:00',
+            'end_time'   => Carbon::parse($attendanceData->work_date)->format('Y-m-d') . ' 18:00:00',
+            'note'       => '出勤時間修正',
+        ]);
+    }
+
+    // ========================================
+    // 16.メール認証機能
+    // ========================================
+    /** @test */
+    public function 会員登録後、認証メールが送信される()
+    {
+        Notification::fake();
+
+        $user = User::factory()->create([
+            'email_verified_at' => null,
+        ]);
+
+        $user->sendEmailVerificationNotification();
+
+        Notification::assertSentTo($user,VerifyEmail::class);
+    }
+
+    /** @test */
+    public function メール認証誘導画面で「認証はこちらから」ボタンを押下するとメール認証サイトに遷移する()
+    {
+        $user = User::factory()->create([
+            'email_verified_at' => null,
+        ]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('verification.notice'));
+        $response->assertStatus(200);
+        $response->assertViewIs('auth.verify-email');
+
+        $response = $this->post(route('verification.send'));
+        $response->assertRedirect();
+    }
+
+    /** @test */
+    public function メール認証サイトのメール認証を完了すると、勤怠登録画面に遷移する()
+    {
+        $user = User::factory()->create([
+            'email_verified_at' => null,
+        ]);
+
+        $this->actingAs($user);
+
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'hash' => sha1($user->email)]
+        );
+
+        $response = $this->get($verificationUrl);
+
+        $this->assertNotNull($user->fresh()->email_verified_at);
+
+        $response->assertRedirect(route('attendance.index', ['verified' => 1]));
+    }
 
 }
