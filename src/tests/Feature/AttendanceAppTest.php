@@ -425,7 +425,7 @@ class AttendanceAppTest extends TestCase
             'is_admin' => 0,
         ]);
 
-        $attendance = Attendance::factory()->create([
+        Attendance::factory()->create([
             'user_id'   => $user->id,
             'work_date' => Carbon::today(),
             'status'    => Attendance::STATUS_WORKING,
@@ -450,7 +450,7 @@ class AttendanceAppTest extends TestCase
             'is_admin' => 0,
         ]);
 
-        $attendance = Attendance::factory()->create([
+        Attendance::factory()->create([
             'user_id'   => $user->id,
             'work_date' => Carbon::today(),
             'status'    => Attendance::STATUS_WORKING,
@@ -505,7 +505,7 @@ class AttendanceAppTest extends TestCase
             'is_admin' => 0,
         ]);
 
-        $attendance = Attendance::factory()->create([
+        Attendance::factory()->create([
             'user_id'   => $user->id,
             'work_date' => Carbon::today(),
             'status'    => Attendance::STATUS_WORKING,
@@ -556,7 +556,7 @@ class AttendanceAppTest extends TestCase
             'is_admin' => 0,
         ]);
 
-        $attendance = Attendance::factory()->create([
+        Attendance::factory()->create([
             'user_id'   => $user->id,
             'work_date' => Carbon::today(),
             'status'    => Attendance::STATUS_WORKING,
@@ -1600,11 +1600,11 @@ class AttendanceAppTest extends TestCase
 
         $userA = User::factory()->create([
             'is_admin' => 0,
-            'name'     => '一般ユーザーA'
+            'name'     => '一般ユーザーA',
         ]);
         $userB = User::factory()->create([
             'is_admin' => 0,
-            'name'     => '一般ユーザーB'
+            'name'     => '一般ユーザーB',
         ]);
 
         $attendanceDataA = Attendance::factory()->create([
@@ -1651,11 +1651,11 @@ class AttendanceAppTest extends TestCase
 
         $userA = User::factory()->create([
             'is_admin' => 0,
-            'name'     => '一般ユーザーA'
+            'name'     => '一般ユーザーA',
         ]);
         $userB = User::factory()->create([
             'is_admin' => 0,
-            'name'     => '一般ユーザーB'
+            'name'     => '一般ユーザーB',
         ]);
 
         $attendanceDataA = Attendance::factory()->create([
@@ -1702,7 +1702,7 @@ class AttendanceAppTest extends TestCase
 
         $user = User::factory()->create([
             'is_admin' => 0,
-            'name'     => 'テスト太郎'
+            'name'     => 'テスト太郎',
         ]);
 
         $attendanceData = Attendance::factory()->create([
@@ -1714,9 +1714,9 @@ class AttendanceAppTest extends TestCase
         $requestData = AttendanceUpdateRequest::factory()->create([
             'attendance_id' => $attendanceData->id,
             'user_id'       => $user->id,
-            'start_time'   => '09:30',
-            'end_time'     => '18:00',
-            'note'         => '出勤時間修正',
+            'start_time'    => '09:30',
+            'end_time'      => '18:00',
+            'note'          => '出勤時間修正',
         ]);
 
         $this->actingAs($admin);
@@ -1740,22 +1740,22 @@ class AttendanceAppTest extends TestCase
 
         $user = User::factory()->create([
             'is_admin' => 0,
-            'name'     => 'テスト太郎'
+            'name'     => 'テスト太郎',
         ]);
 
         $attendanceData = Attendance::factory()->create([
             'user_id'    => $user->id,
-            'start_time'   => '09:00',
-            'end_time'     => '18:00',
+            'start_time' => '09:00',
+            'end_time'   => '18:00',
             'work_date'  => now()->toDateString(),
         ]);
 
         $requestData = AttendanceUpdateRequest::factory()->create([
             'attendance_id' => $attendanceData->id,
             'user_id'       => $user->id,
-            'start_time'   => '09:30',
-            'end_time'     => '18:00',
-            'note'         => '出勤時間修正',
+            'start_time'    => '09:30',
+            'end_time'      => '18:00',
+            'note'          => '出勤時間修正',
         ]);
 
         $this->actingAs($admin);
