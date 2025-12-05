@@ -19,10 +19,10 @@ use Carbon\Carbon;
     </div>
 
     @if(auth()->user()->is_admin)
-        <form action="{{ route('admin.attendance.upsert') }}" method="post">
+        <form action="{{ route('admin.attendance.upsert', ['id' => $attendanceData->id]) }}" method="post">
         @csrf
     @else
-        <form action="{{ route('attendance.update_request') }}" method="post">
+        <form action="{{ route('attendance.update_request', ['id' => $attendanceData->id]) }}" method="post">
         @csrf
     @endif
         <input type="hidden" name="attendanceId" value="{{ $attendanceData->id ?? 0 }}">
