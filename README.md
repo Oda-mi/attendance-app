@@ -183,4 +183,17 @@ php artisan test tests/Feature/AttendanceAppTest.php
 - phpMyAdmin: http://localhost:8080
 
 
+## 要件画面定義以外の追加ルート
+※画面定義パスに含まれない操作用ルートとして追加しています
+## 一般ユーザー
+勤怠打刻操作用のルート（出勤・休憩・退勤）
+- POST /attendance/start … 出勤開始
+- POST /attendance/start_break … 休憩開始
+- POST /attendance/end_break … 休憩終了
+- POST /attendance/end … 退勤
+
+## 管理者
+応用機能CSV出力用のルート
+- POST /admin/export … 勤怠データをCSV形式で出力
+
 
