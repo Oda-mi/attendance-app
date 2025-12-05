@@ -76,13 +76,19 @@ use Carbon\Carbon;
                     <td>{{ Carbon::parse($attendance->work_date)->locale('ja')->translatedFormat('m/d(D)') }}</td>
                     <td>{{ $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '' }}</td>
                     <td>{{ $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '' }}</td>
-                    <td>
-                        @if($attendance->start_time && $attendance->end_time)
-                            {{ gmdate('H:i', $attendance->breakTotal ?? 0) }}
-                        @else
-                            {{-- 出勤・退勤の両方がない場合、または退勤していない場合は空白 --}}
-                        @endif
-                    </td>
+<td>
+    @php
+        $hasStart  = $attendance->start_time;
+        $hasEnd    = $attendance->end_time;
+        $hasBreaks = $attendance->breaks->whereNotNull('start_time')
+                                       ->whereNotNull('end_time')
+                                       ->count() > 0;
+    @endphp
+
+    @if(($hasStart && $hasEnd) || ($hasStart && $hasBreaks))
+        {{ gmdate('H:i', $attendance->breakTotal ?? 0) }}
+    @endif
+</td>
                     <td>{{ $attendance->workTotal ? gmdate('H:i', $attendance->workTotal) : '' }}</td>
                     <td>
                         <a href="{{ route('admin.attendance.detail', [
