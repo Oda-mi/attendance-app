@@ -391,11 +391,13 @@ class AttendanceAppTest extends TestCase
         $responseAfterWorkPage = $this->followingRedirects()->get(route('attendance.index'));
         $responseAfterWorkPage->assertStatus(200);
         $responseAfterWorkPage->assertSee('退勤済');
-    }
-    // テストケースの「画面上に「出勤」ボタンが表示されない」部分
-    // ※現在の画面仕様では HTML に「出勤」ボタンが存在しないため、assertDontSee では確認できない為、
-    // 代わりに assertSee で「退勤済」が表示されていることを確認しています
 
+        // 期待挙動：画面上に「出勤」ボタンが表示されない
+        // 出勤ボタンは 'attendance__button' クラスを持つため、
+        // ボタンの存在可否はこのクラスで判定する
+        // ※ '出勤' だとヘッダー等に含まれる可能性があるため誤検知する
+        $responseAfterWorkPage->assertDontSee('attendance__button--start');
+    }
 
     /** @test */
     public function 出勤時刻が勤怠一覧画面で確認できる()
