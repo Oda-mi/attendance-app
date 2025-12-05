@@ -200,3 +200,11 @@ php artisan test tests/Feature/AttendanceAppTest.php
 - POST /admin/export … 勤怠データをCSV形式で出力
 
 
+| カラム名   | 型           | 属性             | 備考            |
+|------------|--------------|-----------------|----------------|
+| id         | bigint       | PK, AI          | ユーザーID      |
+| name       | varchar(255) | NOT NULL        | ユーザー名      |
+| email      | varchar(255) | UNIQUE, NOT NULL| メールアドレス  |
+| is_admin   | tinyint(1)   | NOT NULL        | 管理者フラグ     |
+| created_at | timestamp    |                 | 作成日時        |
+| updated_at | timestamp    |                 | 更新日時        |
