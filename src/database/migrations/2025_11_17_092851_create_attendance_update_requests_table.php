@@ -17,6 +17,7 @@ class CreateAttendanceUpdateRequestsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('attendance_id')->constrained()->cascadeOnDelete();
+            $table->date('work_date');
             $table->time('start_time')->nullable();
             $table->time('end_time')->nullable();
             $table->json('breaks')->nullable();
