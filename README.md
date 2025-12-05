@@ -173,7 +173,7 @@ php artisan test tests/Feature/AttendanceAppTest.php
 
 ## テーブル仕様
 
-usersテーブル
+### usersテーブル
 | カラム名              | 型            | PK | UNIQUE | NOT NULL | FK |
 | ----------------- | ------------ | -- | ------ | -------- | -- |
 | id                | bigint       | ○  | ○      | ○        |    |
@@ -185,7 +185,7 @@ usersテーブル
 | created_at        | timestamp    |    |        |          |    |
 | updated_at        | timestamp    |    |        |          |    |
 
-attendancesテーブル
+### attendancesテーブル
 | カラム名       | 型            | PK | UNIQUE | NOT NULL | FK       |
 | ---------- | ------------ | -- | ------ | -------- | -------- |
 | id         | bigint       | ○  |        | ○        |          |
@@ -198,7 +198,7 @@ attendancesテーブル
 | created_at | timestamp    |    |        |          |          |
 | updated_at | timestamp    |    |        |          |          |
 
-attendance_breaksテーブル
+### attendance_breaksテーブル
 | カラム名          | 型        | PK | UNIQUE | NOT NULL | FK             |
 | ------------- | -------- | -- | ------ | -------- | -------------- |
 | id            | bigint   | ○  |        | ○        |                |
@@ -208,7 +208,7 @@ attendance_breaksテーブル
 | created_at    | timestamp |    |        |          |               |
 | updated_at    | timestamp |    |        |          |                |
 
-attendance_update_requestsテーブル
+### attendance_update_requestsテーブル
 | カラム名          | 型           | PK | UNIQUE | NOT NULL | FK             |
 | ------------- | ----------- | -- | ------ | -------- | -------------- |
 | id            | bigint      | ○  |        | ○        |                |
