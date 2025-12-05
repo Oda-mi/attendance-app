@@ -98,20 +98,10 @@ MAIL_FROM_NAME="${APP_NAME}"
    - http://localhost:8025
 
 
-
-※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※
-
-
-
-
-
-
-
-
 ## テスト機能について
 
 - 本アプリでは Laravel 標準の PHPUnit を使用してテストを実行します
-- テスト実行時には Factory および Seeder により必要なダミーデータが自動的に生成されます
+- テスト実行時には Factory により必要なダミーデータが自動的に生成されます
 
 
 ### 1. テスト環境設定
@@ -166,14 +156,15 @@ php artisan optimize:clear
 ```
 4. テストを実行
 ```bash
-php artisan test tests/Feature/FleaMarketAppTest.php
+php artisan test tests/Feature/AttendanceAppTest.php
 ```
 
 
 ### 3. テスト用ダミーデータについて
-- ユーザー情報、商品情報、カテゴリー情報などはFactory と Seeder によって自動生成されます
+- ユーザー情報、勤怠情報などはFactoryを用いて自動生成されます
 - テスト実行のたびにデータベースが初期化・再生成されます
-
+- テスト内で生成されたデータはテスト終了時に自動的に破棄さます
+- Seederは使用していません
 
 ## 使用技術（実行環境）
 - Laravel : 8.83.8
