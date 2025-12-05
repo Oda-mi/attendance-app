@@ -18,7 +18,7 @@
 
     <form action="{{ route('attendance.start') }}" method="post">
         @csrf
-        <button type="submit" class="attendance__button">出勤</button>
+        <button type="submit" class="attendance__button attendance__button--start">出勤</button>
     </form>
 </div>
 
