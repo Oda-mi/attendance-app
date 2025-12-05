@@ -178,8 +178,8 @@ php artisan test tests/Feature/AttendanceAppTest.php
 | ----------------- | ------------ | ----------- | ---------- | -------- | ----------- |
 | id                | bigint       | ○           | ○          | ○        |             |
 | name              | varchar(255) |             |            | ○        |             |
-| email             | varchar(255) |             |            | ○        |             |
-| email_verified_at | timestamp    |             | ○          |          |             |
+| email             | varchar(255) |             | ○          | ○        |             |
+| email_verified_at | timestamp    |             |            |          |             |
 | password          | varchar(255) |             |            | ○        |             |
 | is_admin          | tinyint(1)   |             |            | ○        |             |
 | created_at        | timestamp    |             |            |          |             |
