@@ -80,7 +80,13 @@ use Carbon\Carbon;
                         @endif
                     </td>
                     <td>{{ $attendance->workTotal ? gmdate('H:i', $attendance->workTotal) : '' }}</td>
-                    <td><a href="{{ route('attendance.detail', ['id' => $attendance->id, 'date' => $attendance->work_date]) }}" class="common-table__detail-btn">詳細</a></td>
+                    <td>
+                        @if( Carbon::parse($attendance->work_date)->isFuture())
+                            {{-- 未来日はボタン非表示 --}}
+                        @else
+                            <a href="{{ route('attendance.detail', ['id' => $attendance->id, 'date' => $attendance->work_date]) }}" class="common-table__detail-btn">詳細</a>
+                        @endif
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
