@@ -192,6 +192,9 @@ php artisan test tests/Feature/AttendanceAppTest.php
 - POST /attendance/end_break … 休憩終了
 - POST /attendance/end … 退勤
 
+応用機能メール認証用ルート
+- GET /email/verify … メールアドレス確認画面表示
+
 ### 管理者
 応用機能CSV出力用のルート
 - POST /admin/export … 勤怠データをCSV形式で出力
