@@ -171,6 +171,57 @@ php artisan test tests/Feature/AttendanceAppTest.php
 - PHP : 8.4.10
 - MySQL : 8.0
 
+## テーブル仕様
+
+usersテーブル
+| カラム名              | 型            | PK | UNIQUE | NOT NULL | FK |
+| ----------------- | ------------ | -- | ------ | -------- | -- |
+| id                | bigint       | ○  | ○      | ○        |    |
+| name              | varchar(255) |    |        | ○        |    |
+| email             | varchar(255) |    |        | ○        |    |
+| email_verified_at | timestamp    |    |        |          |    |
+| password          | varchar(255) |    |        | ○        |    |
+| is_admin          | tinyint(1)   |    |        | ○        |    |
+| created_at        | timestamp    |    |        |          |    |
+| updated_at        | timestamp    |    |        |          |    |
+
+attendancesテーブル
+| カラム名       | 型            | PK | UNIQUE | NOT NULL | FK       |
+| ---------- | ------------ | -- | ------ | -------- | -------- |
+| id         | bigint       | ○  |        | ○        |          |
+| user_id    | bigint       |    |        | ○        | users(id) |
+| work_date  | date         |    |        | ○        |          |
+| start_time | datetime     |    |        |          |          |
+| end_time   | datetime     |    |        |          |          |
+| status     | varchar(255) |    |        | ○        |          |
+| note       | text         |    |        |          |          |
+| created_at | timestamp    |    |        |          |          |
+| updated_at | timestamp    |    |        |          |          |
+
+attendance_breaksテーブル
+| カラム名          | 型        | PK | UNIQUE | NOT NULL | FK             |
+| ------------- | -------- | -- | ------ | -------- | -------------- |
+| id            | bigint   | ○  |        | ○        |                |
+| attendance_id | bigint   |    |        | ○        | attendances(id) |
+| start_time    | datetime |    |        | ○        |                |
+| end_time      | datetime |    |        |          |                |
+| created_at    | timestamp |    |        |          |               |
+| updated_at    | timestamp |    |        |          |                |
+
+attendance_update_requestsテーブル
+| カラム名          | 型           | PK | UNIQUE | NOT NULL | FK             |
+| ------------- | ----------- | -- | ------ | -------- | -------------- |
+| id            | bigint      | ○  |        | ○        |                |
+| user_id       | bigint      |    |        | ○        | users(id)       |
+| attendance_id | bigint      |    |        |          | attendances(id) |
+| work_date     | date        |    |        | ○        |                |
+| start_time    | datetime    |    |        |          |                |
+| end_time      | datetime    |    |        |          |                |
+| breaks        | json        |    |        |          |                |
+| note          | text        |    |        |          |                |
+| status        | varchar(20) |    |        | ○        |                |
+| created_at    | timestamp   |    |        |          |                |
+| updated_at    | timestamp   |    |        |          |                |
 
 ## ER図
 ![ER図](AttendanceApp_ER.png)
@@ -200,11 +251,3 @@ php artisan test tests/Feature/AttendanceAppTest.php
 - POST /admin/export … 勤怠データをCSV形式で出力
 
 
-| カラム名   | 型           | 属性             | 備考            |
-|------------|--------------|-----------------|----------------|
-| id         | bigint       | PK, AI          | ユーザーID      |
-| name       | varchar(255) | NOT NULL        | ユーザー名      |
-| email      | varchar(255) | UNIQUE, NOT NULL| メールアドレス  |
-| is_admin   | tinyint(1)   | NOT NULL        | 管理者フラグ     |
-| created_at | timestamp    |                 | 作成日時        |
-| updated_at | timestamp    |                 | 更新日時        |
