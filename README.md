@@ -174,54 +174,54 @@ php artisan test tests/Feature/AttendanceAppTest.php
 ## テーブル仕様
 
 ### usersテーブル
-| カラム名              | 型            | PK | UNIQUE | NOT NULL | FK |
-| ----------------- | ------------ | -- | ------ | -------- | -- |
-| id                | bigint       | ○  | ○      | ○        |    |
-| name              | varchar(255) |    |        | ○        |    |
-| email             | varchar(255) |    |        | ○        |    |
-| email_verified_at | timestamp    |    |        |          |    |
-| password          | varchar(255) |    |        | ○        |    |
-| is_admin          | tinyint(1)   |    |        | ○        |    |
-| created_at        | timestamp    |    |        |          |    |
-| updated_at        | timestamp    |    |        |          |    |
+| カラム名           | 型           | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
+| ----------------- | ------------ | ----------- | ---------- | -------- | ----------- |
+| id                | bigint       | ○           | ○          | ○        |             |
+| name              | varchar(255) |             |            | ○        |             |
+| email             | varchar(255) |             |            | ○        |             |
+| email_verified_at | timestamp    |             | ○          |          |             |
+| password          | varchar(255) |             |            | ○        |             |
+| is_admin          | tinyint(1)   |             |            | ○        |             |
+| created_at        | timestamp    |             |            |          |             |
+| updated_at        | timestamp    |             |            |          |             |
 
 ### attendancesテーブル
-| カラム名       | 型            | PK | UNIQUE | NOT NULL | FK       |
-| ---------- | ------------ | -- | ------ | -------- | -------- |
-| id         | bigint       | ○  |        | ○        |          |
-| user_id    | bigint       |    |        | ○        | users(id) |
-| work_date  | date         |    |        | ○        |          |
-| start_time | datetime     |    |        |          |          |
-| end_time   | datetime     |    |        |          |          |
-| status     | varchar(255) |    |        | ○        |          |
-| note       | text         |    |        |          |          |
-| created_at | timestamp    |    |        |          |          |
-| updated_at | timestamp    |    |        |          |          |
+| カラム名    | 型           | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
+| ---------- | ------------ | ----------- | ---------- | -------- | ----------- |
+| id         | bigint       | ○           |            | ○        |             |
+| user_id    | bigint       |             | ○          | ○        | users(id)   |
+| work_date  | date         |             | ○          | ○        |             |
+| start_time | datetime     |             |            |          |             |
+| end_time   | datetime     |             |            |          |             |
+| status     | varchar(255) |             |            | ○        |             |
+| note       | text         |             |            |          |             |
+| created_at | timestamp    |             |            |          |             |
+| updated_at | timestamp    |             |            |          |             |
 
 ### attendance_breaksテーブル
-| カラム名          | 型        | PK | UNIQUE | NOT NULL | FK             |
-| ------------- | -------- | -- | ------ | -------- | -------------- |
-| id            | bigint   | ○  |        | ○        |                |
-| attendance_id | bigint   |    |        | ○        | attendances(id) |
-| start_time    | datetime |    |        | ○        |                |
-| end_time      | datetime |    |        |          |                |
-| created_at    | timestamp |    |        |          |               |
-| updated_at    | timestamp |    |        |          |                |
+| カラム名       | 型        | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY     |
+| ---------- | ------------ | ----------- | ---------- | -------- | --------------- |
+| id            | bigint    | ○           |            | ○        |                 |
+| attendance_id | bigint    |             |            | ○        | attendances(id) |
+| start_time    | datetime  |             |            | ○        |                 |
+| end_time      | datetime  |             |            |          |                 |
+| created_at    | timestamp |             |            |          |                 |
+| updated_at    | timestamp |             |            |          |                 |
 
 ### attendance_update_requestsテーブル
-| カラム名          | 型           | PK | UNIQUE | NOT NULL | FK             |
-| ------------- | ----------- | -- | ------ | -------- | -------------- |
-| id            | bigint      | ○  |        | ○        |                |
-| user_id       | bigint      |    |        | ○        | users(id)       |
-| attendance_id | bigint      |    |        |          | attendances(id) |
-| work_date     | date        |    |        | ○        |                |
-| start_time    | datetime    |    |        |          |                |
-| end_time      | datetime    |    |        |          |                |
-| breaks        | json        |    |        |          |                |
-| note          | text        |    |        |          |                |
-| status        | varchar(20) |    |        | ○        |                |
-| created_at    | timestamp   |    |        |          |                |
-| updated_at    | timestamp   |    |        |          |                |
+| カラム名       | 型          | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY     |
+| ------------- | ----------- | ----------- | ---------- | -------- | --------------- |
+| id            | bigint      | ○           |            | ○        |                 |
+| user_id       | bigint      |             |            | ○        | users(id)       |
+| attendance_id | bigint      |             |            | ○        | attendances(id) |
+| work_date     | date        |             |            |          |                 |
+| start_time    | time        |             |            |          |                 |
+| end_time      | time        |             |            |          |                 |
+| breaks        | json        |             |            |          |                 |
+| note          | text        |             |            |          |                 |
+| status        | varchar(20) |             |            | ○        |                 |
+| created_at    | timestamp   |             |            |          |                 |
+| updated_at    | timestamp   |             |            |          |                 |
 
 ## ER図
 ![ER図](AttendanceApp_ER.png)
