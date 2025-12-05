@@ -225,12 +225,23 @@ class AdminAttendanceController extends Controller
 
         $user = User::findOrFail($userId);
 
+        $startOfMonth = Carbon::create($year, $month, 1)->startOfMonth();
+        $endOfMonth   = Carbon::create($year, $month, 1)->endOfMonth();
+
         $attendances = Attendance::with('breaks')
                                 ->where('user_id', $userId)
-                                ->whereYear('work_date', $year)
-                                ->whereMonth('work_date', $month)
+                                ->whereBetween('work_date', [$startOfMonth, $endOfMonth])
                                 ->orderBy('work_date', 'asc')
-                                ->get();
+                                ->get()
+                                ->keyBy('work_date');
+
+        $allDates = [];
+        $currentDate = $startOfMonth->copy();
+
+        while ($currentDate->lte($endOfMonth)) {
+            $allDates[] = $currentDate->format('Y-m-d');
+            $currentDate->addDay();
+        }
 
         $csvHeader = [
             '日付',
@@ -248,29 +259,34 @@ class AdminAttendanceController extends Controller
 
         fputcsv($handle, $csvHeader);
 
-        foreach($attendances as $attendance) {
+        foreach($allDates as $date) {
 
-            $date = Carbon::parse($attendance->work_date)->format('Y-m-d');
-            $date = "'" . $date;
+            $dateString = $date;
 
-            $start = $attendance->start_time
+            $attendance = $attendances->first(function ($item, $key) use ($dateString) {
+                return Carbon::parse($key)->toDateString() === $dateString;
+            });
+
+            $csvDate = $dateString;
+
+            $start = $attendance?->start_time
                 ? Carbon::parse($attendance->start_time)->format('H:i')
                 : '';
 
-            $end = $attendance->end_time
+            $end = $attendance?->end_time
                 ? Carbon::parse($attendance->end_time)->format('H:i')
                 : '';
 
-            $break = $attendance->breakTotal
+            $break = $attendance?->breakTotal
                 ? gmdate('H:i', $attendance->breakTotal)
                 : '';
 
-            $work = $attendance->workTotal
+            $work = $attendance?->workTotal
                 ? gmdate('H:i', $attendance->workTotal)
                 : '';
 
             fputcsv($handle, [
-                $date,
+                $csvDate,
                 $start,
                 $end,
                 $break,
