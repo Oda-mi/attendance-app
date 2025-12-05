@@ -188,6 +188,7 @@ class AdminAttendanceController extends Controller
                 'user'       => $user,
                 'start_time' => null,
                 'end_time'   => null,
+                'breaks'     => collect(),
                 'breakTotal' => 0,
                 'workTotal'  => 0,
             ];
