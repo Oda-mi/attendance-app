@@ -186,17 +186,18 @@ php artisan test tests/Feature/AttendanceAppTest.php
 | updated_at        | timestamp    |             |            |          |             |
 
 ### attendancesテーブル
-| カラム名    | 型           | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
-| ---------- | ------------ | ----------- | ---------- | -------- | ----------- |
-| id         | bigint       | ○           |            | ○        |             |
-| user_id    | bigint       |             | ○          | ○        | users(id)   |
-| work_date  | date         |             | ○          | ○        |             |
-| start_time | datetime     |             |            |          |             |
-| end_time   | datetime     |             |            |          |             |
-| status     | varchar(255) |             |            | ○        |             |
-| note       | text         |             |            |          |             |
-| created_at | timestamp    |             |            |          |             |
-| updated_at | timestamp    |             |            |          |             |
+| カラム名           | 型            | PRIMARY KEY | UNIQUE KEY              | NOT NULL | FOREIGN KEY |
+| -------------- | ------------ | ----------- | ----------------------- | -------- | ----------- |
+| id             | bigint       | ○           |                         | ○        |             |
+| user_id        | bigint       |             |                         | ○        | users(id)   |
+| work_date      | date         |             |                         | ○        |             |
+| start_time     | datetime     |             |                         |          |             |
+| end_time       | datetime     |             |                         |          |             |
+| status         | varchar(255) |             |                         | ○        |             |
+| note           | text         |             |                         |          |             |
+| created_at     | timestamp    |             |                         |          |             |
+| updated_at     | timestamp    |             |                         |          |             |
+| **(複合ユニークキー)** | —            |             | **user_id + work_date** |          |             |
 
 ### attendance_breaksテーブル
 | カラム名       | 型        | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY     |
@@ -214,7 +215,7 @@ php artisan test tests/Feature/AttendanceAppTest.php
 | id            | bigint      | ○           |            | ○        |                 |
 | user_id       | bigint      |             |            | ○        | users(id)       |
 | attendance_id | bigint      |             |            | ○        | attendances(id) |
-| work_date     | date        |             |            |          |                 |
+| work_date     | date        |             |            | ○        |                 |
 | start_time    | time        |             |            |          |                 |
 | end_time      | time        |             |            |          |                 |
 | breaks        | json        |             |            |          |                 |
