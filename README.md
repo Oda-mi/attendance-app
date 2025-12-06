@@ -81,9 +81,9 @@ MailHog を使用して開発環境でメール認証を確認します
 
 ### MailHog のセットアップ
 1. MailHog をダウンロード・インストール
-   - 本プロジェクトでは MailHog v1.0.0 を使用しています<br>
+   - 本プロジェクトでは MailHog v1.0.1 を使用しています<br>
      動作保証のため、以下のバージョンをダウンロードしてください<br>
-     [GitHubのリリースページ](https://github.com/mailhog/MailHog/releases/v1.0.0) から使用しているOSに適したバージョンをダウンロードしてください
+     [GitHubのリリースページ](https://github.com/mailhog/MailHog/releases/v1.0.1) から使用しているOSに適したバージョンをダウンロードしてください
 2. Docker を使用時は `docker-compose.yml` に定義済みです
 3. `.env` に以下の環境変数を追加
 ```env
@@ -188,18 +188,18 @@ php artisan test tests/Feature/AttendanceAppTest.php
 | updated_at        | timestamp    |             |            |          |             |
 
 ### attendancesテーブル
-| カラム名               | 型           | PRIMARY KEY | UNIQUE KEY              | NOT NULL | FOREIGN KEY |
-| --------------------- | ------------ | ----------- | ----------------------- | -------- | ----------- |
-| id                    | bigint       | ○           |                         | ○        |             |
-| user_id               | bigint       |             |                         | ○        | users(id)   |
-| work_date             | date         |             |                         | ○        |             |
-| start_time            | datetime     |             |                         |          |             |
-| end_time              | datetime     |             |                         |          |             |
-| status                | varchar(255) |             |                         | ○        |             |
-| note                  | text         |             |                         |          |             |
-| created_at            | timestamp    |             |                         |          |             |
-| updated_at            | timestamp    |             |                         |          |             |
-| **(複合ユニークキー)** | —            |             | **user_id + work_date** |          |             |
+※ user_id と work_date の組み合わせに複合ユニーク制約あり
+| カラム名               | 型           | PRIMARY KEY | UNIQUE KEY                     | NOT NULL | FOREIGN KEY |
+| --------------------- | ------------ | ----------- | ------------------------------ | -------- | ----------- |
+| id                    | bigint       | ○           |                                | ○        |             |
+| user_id               | bigint       |             | ○（work_date とセットでユニーク）| ○        | users(id)   |
+| work_date             | date         |             | ○（user_id とセットでユニーク）  | ○        |             |
+| start_time            | datetime     |             |                                |          |             |
+| end_time              | datetime     |             |                                |          |             |
+| status                | varchar(255) |             |                                | ○        |             |
+| note                  | text         |             |                                |          |             |
+| created_at            | timestamp    |             |                                |          |             |
+| updated_at            | timestamp    |             |                                |          |             |
 
 ### attendance_breaksテーブル
 | カラム名       | 型        | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY     |
