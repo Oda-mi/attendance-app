@@ -81,9 +81,9 @@ MailHog を使用して開発環境でメール認証を確認します
 
 ### MailHog のセットアップ
 1. MailHog をダウンロード・インストール
- - 本プロジェクトでは MailHog v1.0.0 を使用しています:
-動作保証のため、以下のバージョンをダウンロードしてください:
-   - [GitHubのリリースページ](https://github.com/mailhog/MailHog/releases/v1.0.0) から使用しているOSに適したバージョンをダウンロードしてください
+   - 本プロジェクトでは MailHog v1.0.0 を使用しています<br>
+     動作保証のため、以下のバージョンをダウンロードしてください<br>
+     [GitHubのリリースページ](https://github.com/mailhog/MailHog/releases/v1.0.0) から使用しているOSに適したバージョンをダウンロードしてください
 2. Docker を使用時は `docker-compose.yml` に定義済みです
 3. `.env` に以下の環境変数を追加
 ```env
