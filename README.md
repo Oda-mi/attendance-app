@@ -57,11 +57,11 @@ php artisan db:seed
 ```
 
 ## ダミーユーザー情報（シーディング用）
-1. 管理ユーザー
+**管理ユーザー**
 - 名前: 管理者
 - メール: admin@example.com
 - パスワード: admin123
-2. 一般ユーザー
+**一般ユーザー**
 - 名前: テスト太郎
 - メール: test@example.com
 - パスワード: password123
