@@ -188,7 +188,7 @@ php artisan test tests/Feature/AttendanceAppTest.php
 | updated_at        | timestamp    |             |            |          |             |
 
 ### attendancesテーブル
-※ user_id と work_date の組み合わせに複合ユニーク制約あり
+**※ user_id と work_date の組み合わせに複合ユニーク制約あり**
 | カラム名               | 型           | PRIMARY KEY | UNIQUE KEY                     | NOT NULL | FOREIGN KEY |
 | --------------------- | ------------ | ----------- | ------------------------------ | -------- | ----------- |
 | id                    | bigint       | ○           |                                | ○        |             |
