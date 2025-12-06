@@ -7,7 +7,7 @@
 
 1. リポジトリをクローン
 ``` bash
-git clone git@github.com:Oda-mi/attendacne-app.git
+git clone git@github.com:Oda-mi/attendance-app.git
 ```
 2. Docker Desktop を起動
 3. コンテナをビルドして起動
@@ -81,6 +81,8 @@ MailHog を使用して開発環境でメール認証を確認します
 
 ### MailHog のセットアップ
 1. MailHog をダウンロード・インストール
+ - 本プロジェクトでは MailHog v1.0.0 を使用しています:
+動作保証のため、以下のバージョンをダウンロードしてください:
    - [GitHubのリリースページ](https://github.com/mailhog/MailHog/releases/v1.0.0) から使用しているOSに適したバージョンをダウンロードしてください
 2. Docker を使用時は `docker-compose.yml` に定義済みです
 3. `.env` に以下の環境変数を追加
@@ -163,7 +165,7 @@ php artisan test tests/Feature/AttendanceAppTest.php
 ### 3. テスト用ダミーデータについて
 - ユーザー情報、勤怠情報などはFactoryを用いて自動生成されます
 - テスト実行のたびにデータベースが初期化・再生成されます
-- テスト内で生成されたデータはテスト終了時に自動的に破棄さます
+- テスト内で生成されたデータはテスト終了時に自動的に破棄されます
 - Seederは使用していません
 
 ## 使用技術（実行環境）
@@ -186,17 +188,17 @@ php artisan test tests/Feature/AttendanceAppTest.php
 | updated_at        | timestamp    |             |            |          |             |
 
 ### attendancesテーブル
-| カラム名           | 型            | PRIMARY KEY | UNIQUE KEY              | NOT NULL | FOREIGN KEY |
-| -------------- | ------------ | ----------- | ----------------------- | -------- | ----------- |
-| id             | bigint       | ○           |                         | ○        |             |
-| user_id        | bigint       |             |                         | ○        | users(id)   |
-| work_date      | date         |             |                         | ○        |             |
-| start_time     | datetime     |             |                         |          |             |
-| end_time       | datetime     |             |                         |          |             |
-| status         | varchar(255) |             |                         | ○        |             |
-| note           | text         |             |                         |          |             |
-| created_at     | timestamp    |             |                         |          |             |
-| updated_at     | timestamp    |             |                         |          |             |
+| カラム名               | 型           | PRIMARY KEY | UNIQUE KEY              | NOT NULL | FOREIGN KEY |
+| --------------------- | ------------ | ----------- | ----------------------- | -------- | ----------- |
+| id                    | bigint       | ○           |                         | ○        |             |
+| user_id               | bigint       |             |                         | ○        | users(id)   |
+| work_date             | date         |             |                         | ○        |             |
+| start_time            | datetime     |             |                         |          |             |
+| end_time              | datetime     |             |                         |          |             |
+| status                | varchar(255) |             |                         | ○        |             |
+| note                  | text         |             |                         |          |             |
+| created_at            | timestamp    |             |                         |          |             |
+| updated_at            | timestamp    |             |                         |          |             |
 | **(複合ユニークキー)** | —            |             | **user_id + work_date** |          |             |
 
 ### attendance_breaksテーブル
