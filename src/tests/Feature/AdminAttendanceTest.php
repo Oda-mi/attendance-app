@@ -8,7 +8,6 @@ use Tests\TestCase;
 
 use App\Models\User;
 use App\Models\Attendance;
-use App\Models\AttendanceBreak;
 use App\Models\AttendanceUpdateRequest;
 use Carbon\Carbon;
 
