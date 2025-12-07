@@ -99,6 +99,7 @@ class StampCorrectionRequestController extends Controller
             $attendance->update([
                 'start_time' => $startDateTime,
                 'end_time'   => $endDateTime,
+                'status'     => 'after_work',
                 'note'       => $requestData->note,
             ]);
 
