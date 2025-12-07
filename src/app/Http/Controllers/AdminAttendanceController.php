@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use Carbon\CarbonPeriod;
+
+use App\Http\Requests\AttendanceUpdateRequestForm;
+use App\Models\User;
 use App\Models\Attendance;
 use App\Models\AttendanceUpdateRequest;
-use App\Models\User;
-use App\Http\Requests\AttendanceUpdateRequestForm;
+
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
+
 
 
 class AdminAttendanceController extends Controller

@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\AttendanceUpdateRequestForm;
 use Illuminate\Support\Facades\DB;
 
+use App\Http\Requests\AttendanceUpdateRequestForm;
 use App\Models\Attendance;
 use App\Models\AttendanceUpdateRequest;
-
-
 
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;

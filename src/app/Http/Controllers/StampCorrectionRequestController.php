@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\AttendanceUpdateRequest;
 use Illuminate\Support\Facades\DB;
+
+use App\Models\AttendanceUpdateRequest;
+
 use Carbon\Carbon;
 
 class StampCorrectionRequestController extends Controller
