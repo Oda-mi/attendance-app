@@ -3,9 +3,9 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Carbon\Carbon;
 use App\Models\AttendanceBreak;
 use App\Models\Attendance;
-use Carbon\Carbon;
 
 class AttendanceBreakFactory extends Factory
 {

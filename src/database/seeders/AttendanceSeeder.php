@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Attendance;
-use Carbon\Carbon;
 
 class AttendanceSeeder extends Seeder
 {
