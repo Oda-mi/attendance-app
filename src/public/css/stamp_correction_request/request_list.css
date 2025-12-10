@@ -77,11 +77,12 @@
     font-size: 15px;
     color: #737373;
     font-weight: bold;
+    height: 50px;
+    white-space: nowrap;
 }
 
 .note-column {
     max-width: 200px;
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
