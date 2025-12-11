@@ -201,21 +201,38 @@ class AttendanceController extends Controller
 
         $period = CarbonPeriod::create($start, $end);
 
-        $attendanceDays = collect($period)->map(function ($date) use ($attendances)
+        $attendanceDays = collect($period)->map(function ($date) use ($attendances, $user)
         {
             $attendance = $attendances->first(function ($workDate) use ($date) {
                 return Carbon::parse($workDate->work_date)->isSameDay($date);
             });
 
-            return $attendance ?? (object)[
-                'id'         => null,
-                'work_date'  => $date->format('Y-m-d'),
-                'start_time' => null,
-                'end_time'   => null,
-                'breaks'     => collect(),
-                'breakTotal' => 0,
-                'workTotal'  => 0,
-            ];
+            $updateRequest = AttendanceUpdateRequest::where('user_id', $user->id)
+                                                    ->whereDate('work_date', $date)
+                                                    ->where('status', 'pending')
+                                                    ->latest('id')
+                                                    ->first();
+
+            if($updateRequest){
+                $attendance = $updateRequest;
+                $attendance->is_pending = true;
+
+            } elseif ($attendance) {
+                $attendance->is_pending = false;
+
+            } else {
+                $attendance = (object)[
+                    'id'         => null,
+                    'work_date'  => $date->format('Y-m-d'),
+                    'start_time' => null,
+                    'end_time'   => null,
+                    'breaks'     => collect(),
+                    'breakTotal' => 0,
+                    'workTotal'  => 0,
+                    'is_pending' => false,
+                ];
+            }
+            return $attendance;
         });
 
         return view('attendance.list', compact(
@@ -248,7 +265,7 @@ class AttendanceController extends Controller
 
             if ($updateRequest && $updateRequest->status === 'pending') {
 
-                $attendanceData = $updateRequest;
+                $attendanceData = (object) $updateRequest->toArray();
                 $isEditable = false;
 
                 $breaks = collect(
@@ -288,8 +305,6 @@ class AttendanceController extends Controller
             $breaks = collect();
             $isEditable = true;
         }
-
-        $user = $attendanceData->user;
 
         $layout = 'layouts.auth';
 

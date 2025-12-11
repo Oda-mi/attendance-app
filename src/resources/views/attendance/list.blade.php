@@ -2,6 +2,7 @@
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/layouts/common_table.css') }}">
+<link rel="stylesheet" href="{{ asset('css/attendance/list.css') }}">
 @endsection
 
 @section('content')
@@ -63,28 +64,32 @@ use Carbon\Carbon;
             </thead>
             <tbody>
                 @foreach($attendanceDays as $attendance)
-                <tr>
-                    <td>{{ Carbon::parse($attendance->work_date)->locale('ja')->translatedFormat('m/d(D)') }}</td>
-                    <td>{{ $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '' }}</td>
-                    <td>{{ $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '' }}</td>
+                <tr class="{{ $attendance->is_pending ? 'pending-row' : '' }}">
+                    <td>{{ $attendance?->work_date ? Carbon::parse($attendance->work_date)->locale('ja')->translatedFormat('m/d(D)') : '' }}</td>
+                    <td>{{ $attendance?->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '' }}</td>
+                    <td>{{ $attendance?->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '' }}</td>
                     <td>
                         @php
-                            $hasStart  = $attendance->start_time;
-                            $hasEnd    = $attendance->end_time;
-                            $hasBreaks = $attendance->breaks->whereNotNull('start_time')
-                                                            ->whereNotNull('end_time')
-                                                            ->count() > 0;
+                            $hasStart  = $attendance?->start_time;
+                            $hasEnd    = $attendance?->end_time;
+                            $breaks    = collect($attendance?->breaks ?? []);
+                            $hasBreaks = $breaks->whereNotNull('start_time')
+                                                ->whereNotNull('end_time')
+                                                ->count() > 0;
                         @endphp
                         @if(($hasStart && $hasEnd) || ($hasStart && $hasBreaks))
                             {{ gmdate('H:i', $attendance->breakTotal ?? 0) }}
                         @endif
                     </td>
-                    <td>{{ $attendance->workTotal ? gmdate('H:i', $attendance->workTotal) : '' }}</td>
+                    <td>{{ $attendance?->workTotal ? gmdate('H:i', $attendance->workTotal) : '' }}</td>
                     <td>
-                        @if( Carbon::parse($attendance->work_date)->isFuture())
+                        @if( Carbon::parse($attendance?->work_date)->isFuture())
                             {{-- 未来日はボタン非表示 --}}
                         @else
-                            <a href="{{ route('attendance.detail', ['id' => $attendance->id, 'date' => $attendance->work_date]) }}" class="common-table__detail-btn">詳細</a>
+                            <a href="{{ route('attendance.detail', [
+                                'id' => $attendance?->attendance_id ?? $attendance?->id,
+                                'date' => $attendance?->work_date]) }}"
+                                class="common-table__detail-btn">詳細</a>
                         @endif
                     </td>
                 </tr>
