@@ -1,9 +1,3 @@
 .pending-row td {
-    color: #d9534f;
-    font-weight: bold;
-}
-
-.pending-row td a {
-    color: #d9534f;
-    font-weight: bold;
+    background-color: #ffefef;
 }
