@@ -2,6 +2,7 @@
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/layouts/common_table.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin/attendance/daily_list.css') }}">
 @endsection
 
 @section('content')
@@ -63,7 +64,7 @@ use Carbon\Carbon;
             </thead>
             <tbody>
                 @foreach($attendances as $attendance)
-                <tr>
+                <tr class="{{ $attendance->is_pending ? 'pending-row' : '' }}">
                     <td>{{ $attendance->user->name }}</td>
                     <td>{{ $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '' }}</td>
                     <td>{{ $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '' }}</td>
@@ -71,20 +72,22 @@ use Carbon\Carbon;
                         @php
                             $hasStart  = $attendance->start_time;
                             $hasEnd    = $attendance->end_time;
-                            $hasBreaks = $attendance->breaks->whereNotNull('start_time')
-                                                            ->whereNotNull('end_time')
-                                                            ->count() > 0;
+                            $breaks    = collect($attendance->breaks ?? []);
+                            $hasBreaks = $breaks->whereNotNull('start_time')
+                                                ->whereNotNull('end_time')
+                                                ->count() > 0;
                         @endphp
                         @if(($hasStart && $hasEnd) || ($hasStart && $hasBreaks))
                             {{ gmdate('H:i', $attendance->breakTotal ?? 0) }}
                         @endif
                     </td>
                     <td>{{ $attendance->workTotal ? gmdate('H:i', $attendance->workTotal) : '' }}</td>
-                    <td><a href="{{ route('admin.attendance.detail', [
-                            'id' => $attendance->id ?? 0,
+                    <td>
+                        <a href="{{ route('admin.attendance.detail', [
+                            'id' => $attendance->attendance_id ?? $attendance->id ?? 0,
                             'date' => $attendance->work_date,
-                            'user_id' => $attendance->user->id,
-                        ]) }}" class="common-table__detail-btn">詳細</a>
+                            'user_id' => $attendance->user->id,]) }}"
+                            class="common-table__detail-btn">詳細</a>
                     </td>
                 </tr>
                 @endforeach

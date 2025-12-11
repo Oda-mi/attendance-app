@@ -72,30 +72,30 @@ use Carbon\Carbon;
             </thead>
             <tbody>
                 @foreach($attendanceDays as $attendance)
-                <tr>
-                    <td>{{ Carbon::parse($attendance->work_date)->locale('ja')->translatedFormat('m/d(D)') }}</td>
-                    <td>{{ $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '' }}</td>
-                    <td>{{ $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '' }}</td>
+                <tr class="{{ $attendance->is_pending ? 'pending-row' : '' }}">
+                    <td>{{ $attendance?->work_date ? Carbon::parse($attendance->work_date)->locale('ja')->translatedFormat('m/d(D)') : '' }}</td>
+                    <td>{{ $attendance?->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '' }}</td>
+                    <td>{{ $attendance?->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '' }}</td>
                     <td>
                         @php
-                            $hasStart  = $attendance->start_time;
-                            $hasEnd    = $attendance->end_time;
-                            $hasBreaks = $attendance->breaks->whereNotNull('start_time')
-                                                            ->whereNotNull('end_time')
-                                                            ->count() > 0;
+                            $hasStart  = $attendance?->start_time;
+                            $hasEnd    = $attendance?->end_time;
+                            $breaks    = collect($attendance?->breaks ?? []);
+                            $hasBreaks = $breaks->whereNotNull('start_time')
+                                                ->whereNotNull('end_time')
+                                                ->count() > 0;
                         @endphp
                         @if(($hasStart && $hasEnd) || ($hasStart && $hasBreaks))
                             {{ gmdate('H:i', $attendance->breakTotal ?? 0) }}
                         @endif
                     </td>
-                    <td>{{ $attendance->workTotal ? gmdate('H:i', $attendance->workTotal) : '' }}</td>
+                    <td>{{ $attendance?->workTotal ? gmdate('H:i', $attendance->workTotal) : '' }}</td>
                     <td>
                         <a href="{{ route('admin.attendance.detail', [
-                            'id' => $attendance->id ?? 0,
-                            'date' => $attendance->work_date,
-                            'user_id' => $attendance->user->id,
-                        ]) }}" class="common-table__detail-btn">
-                        詳細</a>
+                            'id' => $attendance?->attendance_id ?? $attendance?->id ?? 0,
+                            'date' => $attendance?->work_date,
+                            'user_id' => $attendance?->user->id,]) }}"
+                            class="common-table__detail-btn">詳細</a>
                     </td>
                 </tr>
                 @endforeach

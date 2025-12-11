@@ -36,10 +36,28 @@ class AdminAttendanceController extends Controller
 
         $attendanceDate = Carbon::parse($dateString);
 
-        $attendances = Attendance::with('breaks', 'user')
-                                ->whereDate('work_date', $attendanceDate)
-                                ->orderBy(User::select('name')->whereColumn('users.id', 'attendances.user_id'))
-                                ->get();
+        $baseAttendances = Attendance::with('breaks', 'user')
+                                    ->whereDate('work_date', $attendanceDate)
+                                    ->orderBy(User::select('name')->whereColumn('users.id', 'attendances.user_id'))
+                                    ->get();
+
+        $pendingRequests = AttendanceUpdateRequest::where('status', 'pending')
+                                                ->whereIn('attendance_id', $baseAttendances->pluck('id'))
+                                                ->get()
+                                                ->keyBy('attendance_id');
+
+        $attendances = $baseAttendances->map(function ($attendance) use ($pendingRequests) {
+
+            if ($pendingRequests->has($attendance->id)) {
+
+                $pending = $pendingRequests->get($attendance->id);
+
+                $pending->is_pending = true;
+                return $pending;
+            }
+                $attendance->is_pending = false;
+                return $attendance;
+        });
 
         $prevDate = $attendanceDate->copy()->subDay()->format('Y-m-d');
         $nextDate = $attendanceDate->copy()->addDay()->format('Y-m-d');
@@ -68,26 +86,29 @@ class AdminAttendanceController extends Controller
         $user = null;
 
         if ($id) {
-            $attendance = Attendance::with('breaks','user','attendanceUpdateRequests')
-                                    ->findOrFail($id);
+            $updateRequest = AttendanceUpdateRequest::where('attendance_id', $id)
+                                                    ->latest()
+                                                    ->first();
 
-            $user = $attendance->user;
+            if ($updateRequest && $updateRequest->status === 'pending') {
 
-            $pendingRequest = $attendance->attendanceUpdateRequests()
-                                        ->where('status', 'pending')
-                                        ->latest()
-                                        ->first();
+                $attendanceData = (object) $updateRequest->toArray();
 
-            if ($pendingRequest) {
-                $attendanceData = $pendingRequest;
                 $isEditable = false;
 
                 $breaks = collect(
-                    is_string($pendingRequest->breaks)
-                    ? json_decode($pendingRequest->breaks)
-                    : json_decode(json_encode($pendingRequest->breaks))
+                    is_string($updateRequest->breaks)
+                    ? json_decode($updateRequest->breaks)
+                    : json_decode(json_encode($updateRequest->breaks))
                 );
+
+                $user = $updateRequest->user;
+
             } else {
+
+                $attendance = Attendance::with('breaks', 'user')
+                                        ->findOrFail($id);
+
                 $attendanceData = $attendance;
                 $isEditable = true;
 
@@ -96,16 +117,19 @@ class AdminAttendanceController extends Controller
                     ? json_decode($attendance->breaks)
                     : json_decode(json_encode($attendance->breaks))
                 );
+
+                $user = $attendance->user;
             }
         } else {
+
             $work_date = $request->input('date') ?? now()->format('Y-m-d');
 
             $user = User::findOrFail($request->input('user_id'));
 
             $attendanceData = new Attendance([
                 'id'         => 0,
-                'work_date'  => $work_date,
                 'user_id'    => $user->id,
+                'work_date'  => $work_date,
                 'start_time' => null,
                 'end_time'   => null,
             ]);
@@ -185,16 +209,33 @@ class AdminAttendanceController extends Controller
                 return Carbon::parse($workDate->work_date)->isSameDay($date);
             });
 
-            return $attendance ?? (object)[
-                'id'         => null,
-                'work_date'  => $date->format('Y-m-d'),
-                'user'       => $user,
-                'start_time' => null,
-                'end_time'   => null,
-                'breaks'     => collect(),
-                'breakTotal' => 0,
-                'workTotal'  => 0,
-            ];
+            $updateRequest = AttendanceUpdateRequest::where('user_id', $user->id)
+                                                    ->whereDate('work_date', $date)
+                                                    ->where('status', 'pending')
+                                                    ->latest('id')
+                                                    ->first();
+
+            if($updateRequest){
+                $attendance = $updateRequest;
+                $attendance->is_pending = true;
+
+            } elseif ($attendance) {
+                $attendance->is_pending = false;
+
+            } else {
+                $attendance = (object)[
+                    'id'         => null,
+                    'work_date'  => $date->format('Y-m-d'),
+                    'start_time' => null,
+                    'end_time'   => null,
+                    'breaks'     => collect(),
+                    'breakTotal' => 0,
+                    'workTotal'  => 0,
+                    'is_pending' => false,
+                    'user'       => $user,
+                ];
+            }
+            return $attendance;
         });
 
         return view('admin.attendance.monthly_list', compact(
