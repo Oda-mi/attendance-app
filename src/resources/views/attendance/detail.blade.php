@@ -73,13 +73,13 @@ use Carbon\Carbon;
                         </div>
                         <div class="attendance-form__error">
                         @error('time')
-                            {{ $message }}
+                            <span>{{ $message }}</span>
                         @enderror
                         @error('work_time_format')
-                            {{ $message }}
+                            <span>{{ $message }}</span>
                         @enderror
                         @error('work_time')
-                            {{ $message }}
+                            <span>{{ $message }}</span>
                         @enderror
                         </div>
                     </td>
@@ -111,19 +111,19 @@ use Carbon\Carbon;
                         </div>
                         <div class="attendance-form__error">
                             @error("break_start_format.$index")
-                                {{ $message }}
+                                <span>{{ $message }}</span>
                             @enderror
                             @error("break_end_format.$index")
-                            {{ $message }}
+                                <span>{{ $message }}</span>
                             @enderror
                             @error("break_start.$index")
-                                {{ $message }}
+                                <span>{{ $message }}</span>
                             @enderror
                             @error("break_end.$index")
-                                {{ $message }}
+                                <span>{{ $message }}</span>
                             @enderror
                             @error("break_start_end.$index")
-                                {{ $message }}
+                                <span>{{ $message }}</span>
                             @enderror
                         </div>
                     </td>
@@ -148,19 +148,19 @@ use Carbon\Carbon;
                         </div>
                         <div class="attendance-form__error">
                             @error("break_start_format." . $breaks->count())
-                                {{ $message }}
+                                <span>{{ $message }}</span>
                             @enderror
                             @error("break_end_format." . $breaks->count())
-                                {{ $message }}
+                                <span>{{ $message }}</span>
                             @enderror
                             @error("break_start." . $breaks->count())
-                                {{ $message }}
+                                <span>{{ $message }}</span>
                             @enderror
                             @error("break_end." . $breaks->count())
-                                {{ $message }}
+                                <span>{{ $message }}</span>
                             @enderror
                             @error("break_start_end." . $breaks->count())
-                                {{ $message }}
+                                <span>{{ $message }}</span>
                             @enderror
                         </div>
                     </td>
@@ -178,7 +178,7 @@ use Carbon\Carbon;
                         @endif
                         <div class="attendance-form__error">
                         @error('note')
-                            {{ $message }}
+                            <span>{{ $message }}</span>
                         @enderror
                         </div>
                     </td>

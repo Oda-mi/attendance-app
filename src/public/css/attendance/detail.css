@@ -143,6 +143,10 @@
     text-align: left;
 }
 
+.attendance-form__error span {
+    display: block;
+}
+
 
 .attendance-detail__button {
     display: flex;
