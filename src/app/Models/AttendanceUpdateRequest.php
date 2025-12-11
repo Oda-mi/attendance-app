@@ -34,4 +34,23 @@ class AttendanceUpdateRequest extends Model
         {
             return $this->belongsTo(Attendance::class);
         }
+
+        public function getBreakTotalAttribute()
+        {
+            return collect($this->breaks)->sum(function($break) {
+                if(!empty($break['start_time']) && !empty($break['end_time'])){
+                    return strtotime($break['end_time']) - strtotime($break['start_time']);
+                }
+                return 0;
+            });
+        }
+
+        public function getWorkTotalAttribute()
+        {
+            if($this->start_time && $this->end_time){
+                return strtotime($this->end_time) - strtotime($this->start_time) - $this->breakTotal;
+            }
+                return 0;
+        }
+
 }
