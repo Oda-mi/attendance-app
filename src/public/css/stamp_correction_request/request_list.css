@@ -105,4 +105,13 @@
     text-decoration: underline;
 }
 
+.sort-link {
+    color: #737373;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.sort-link:hover {
+    text-decoration: underline;
+}
 
