@@ -95,7 +95,9 @@ use Carbon\Carbon;
                             'id' => $attendance?->attendance_id ?? $attendance?->id ?? 0,
                             'date' => $attendance?->work_date,
                             'user_id' => $attendance?->user->id,]) }}"
-                            class="common-table__detail-btn">詳細</a>
+                            class="common-table__detail-btn">
+                            詳細
+                        </a>
                     </td>
                 </tr>
                 @endforeach

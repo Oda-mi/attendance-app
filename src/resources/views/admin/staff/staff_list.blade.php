@@ -28,7 +28,12 @@
                 <tr>
                     <td>{{ $staff->name }}</td>
                     <td>{{ $staff->email }}</td>
-                    <td><a href="{{ route('admin.attendance.monthly_list', ['id' => $staff->id ]) }}" class="common-table__detail-btn">詳細</a></td>
+                    <td>
+                        <a href="{{ route('admin.attendance.monthly_list', [
+                            'id' => $staff->id ]) }}"
+                            class="common-table__detail-btn">詳細
+                        </a>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

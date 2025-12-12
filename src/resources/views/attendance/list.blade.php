@@ -89,7 +89,9 @@ use Carbon\Carbon;
                             <a href="{{ route('attendance.detail', [
                                 'id' => $attendance?->attendance_id ?? $attendance?->id,
                                 'date' => $attendance?->work_date]) }}"
-                                class="common-table__detail-btn">詳細</a>
+                                class="common-table__detail-btn">
+                                詳細
+                            </a>
                         @endif
                     </td>
                 </tr>
