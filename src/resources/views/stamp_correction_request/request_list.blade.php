@@ -31,9 +31,27 @@ use Carbon\Carbon;
                 <tr>
                     <th>状態</th>
                     <th>名前</th>
-                    <th>対象日時</th>
+                    <th>
+                        <a class="sort-link"
+                            href="{{ route('stamp_correction_request.list', [
+                                'sort_by' => 'work_date',
+                                'sort_dir' => $sortBy === 'work_date' && $sortDir === 'asc' ? 'desc' : 'asc',
+                                'tab' => 'pending'
+                            ]) }}">
+                            対象日時{{ $sortBy === 'work_date' ? ($sortDir === 'asc' ? '▲' : '▼') : '▼' }}
+                        </a>
+                    </th>
                     <th>申請理由</th>
-                    <th>申請日時</th>
+                    <th>
+                        <a class="sort-link"
+                            href="{{ route('stamp_correction_request.list', [
+                                'sort_by' => 'created_at',
+                                'sort_dir' => $sortBy === 'created_at' && $sortDir === 'asc' ? 'desc' : 'asc',
+                                'tab' => 'pending'
+                            ]) }}">
+                            申請日時{{ $sortBy === 'created_at' ? ($sortDir === 'asc' ? '▲' : '▼') : '▼' }}
+                        </a>
+                    </th>
                     <th>詳細</th>
                 </tr>
             </thead>
@@ -47,9 +65,15 @@ use Carbon\Carbon;
                     <td>{{ Carbon::parse($request->created_at)->format('Y/m/d') }}</td>
                     <td>
                         @if(auth()->user()->is_admin)
-                            <a href="{{ route('stamp_correction_request.approve', ['attendance_correct_request_id' => $request->id]) }}" class="common-table__detail-btn">詳細</a>
+                            <a href="{{ route('stamp_correction_request.approve', [
+                                'attendance_correct_request_id' => $request->id
+                            ]) }}"
+                            class="common-table__detail-btn">詳細</a>
                         @else
-                            <a href="{{ route('attendance.detail', ['id' => $request->attendance_id]) }}" class="common-table__detail-btn">詳細</a>
+                            <a href="{{ route('attendance.detail', [
+                                'id' => $request->attendance_id
+                            ]) }}"
+                            class="common-table__detail-btn">詳細</a>
                         @endif
                     </td>
                 </tr>
@@ -63,9 +87,27 @@ use Carbon\Carbon;
                 <tr>
                     <th>状態</th>
                     <th>名前</th>
-                    <th>対象日時</th>
+                    <th>
+                        <a class="sort-link"
+                            href="{{ route('stamp_correction_request.list', [
+                                'sort_by' => 'work_date',
+                                'sort_dir' => $sortBy === 'work_date' && $sortDir === 'asc' ? 'desc' : 'asc',
+                                'tab' => 'approved'
+                            ]) }}">
+                            対象日時{{ $sortBy === 'work_date' ? ($sortDir === 'asc' ? '▲' : '▼') : '▼' }}
+                        </a>
+                    </th>
                     <th>申請理由</th>
-                    <th>申請日時</th>
+                    <th>
+                        <a class="sort-link"
+                            href="{{ route('stamp_correction_request.list', [
+                                'sort_by' => 'created_at',
+                                'sort_dir' => $sortBy === 'created_at' && $sortDir === 'asc' ? 'desc' : 'asc',
+                                'tab' => 'approved'
+                            ]) }}">
+                            申請日時{{ $sortBy === 'created_at' ? ($sortDir === 'asc' ? '▲' : '▼') : '▼' }}
+                        </a>
+                    </th>
                     <th>詳細</th>
                 </tr>
             </thead>
@@ -79,9 +121,15 @@ use Carbon\Carbon;
                     <td>{{ Carbon::parse($request->created_at)->format('Y/m/d') }}</td>
                     <td>
                         @if (auth()->user()->is_admin)
-                            <a href="{{ route('stamp_correction_request.approve', ['attendance_correct_request_id' => $request->id]) }}" class="common-table__detail-btn">詳細</a>
+                            <a href="{{ route('stamp_correction_request.approve', [
+                                'attendance_correct_request_id' => $request->id
+                            ]) }}"
+                            class="common-table__detail-btn">詳細</a>
                         @else
-                            <a href="{{ route('attendance.detail', ['id' => $request->attendance_id]) }}" class="common-table__detail-btn">詳細</a>
+                            <a href="{{ route('attendance.detail', [
+                                'id' => $request->attendance_id
+                            ]) }}"
+                            class="common-table__detail-btn">詳細</a>
                         @endif
                     </td>
                 </tr>
@@ -96,10 +144,27 @@ use Carbon\Carbon;
 @push('scripts')
 
 <script>
+
     document.addEventListener('DOMContentLoaded', function() {
         const tabButtons = document.querySelectorAll('.nav__tab');
         const tabContents = document.querySelectorAll('.tab-content');
+        const activeTab = "{{ $activeTab }}";
 
+         // タブのアクティブ切り替え
+        tabButtons.forEach(tab => {
+            if (tab.dataset.target === activeTab) {
+                tab.classList.add('nav__tab--active');
+            } else {
+                tab.classList.remove('nav__tab--active');
+            }
+        });
+
+        // コンテンツの表示切り替え
+        tabContents.forEach(content => {
+            content.style.display = (content.id === activeTab) ? 'block' : 'none';
+        });
+
+        // タブをクリックした時のイベントセット
         tabButtons.forEach(tabButton => {
             tabButton.addEventListener('click', (clickEvent) => {
                 clickEvent.preventDefault();

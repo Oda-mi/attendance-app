@@ -12,7 +12,7 @@ use Carbon\Carbon;
 class StampCorrectionRequestController extends Controller
 {
 
-    public function requestList()
+    public function requestList(Request $request)
     {
         $user = auth()->user();
 
@@ -20,36 +20,33 @@ class StampCorrectionRequestController extends Controller
             ? 'layouts.admin'
             : 'layouts.auth';
 
-        if($user->is_admin){
+        $sortBy = $request->input('sort_by', 'work_date');
+        $sortDir = $request->input('sort_dir', 'asc');
 
-            $pendingRequests = AttendanceUpdateRequest::with('user')
-                                                        ->where('status', 'pending')
-                                                        ->orderBy('work_date', 'asc')
-                                                        ->get();
+        $activeTab = $request->input('tab', 'pending');
 
-            $approvedRequests = AttendanceUpdateRequest::with('user')
-                                                        ->where('status', 'approved')
-                                                        ->orderBy('work_date', 'asc')
-                                                        ->get();
+        $baseQuery = AttendanceUpdateRequest::with('user')
+            ->when(!$user->is_admin, function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->orderBy($sortBy, $sortDir);
 
-        } else {
+        $pendingRequests = (clone $baseQuery)
+                        ->where('status', 'pending')
+                        ->get();
 
-            $pendingRequests = AttendanceUpdateRequest::where('user_id', $user->id)
-                                                        ->where('status', 'pending')
-                                                        ->orderBy('work_date', 'asc')
-                                                        ->get();
-
-            $approvedRequests = AttendanceUpdateRequest::where('user_id', $user->id)
-                                                        ->where('status', 'approved')
-                                                        ->orderBy('work_date', 'asc')
-                                                        ->get();
-        }
+        $approvedRequests = (clone $baseQuery)
+                        ->where('status', 'approved')
+                        ->get();
 
         return view('stamp_correction_request.request_list',compact(
             'layout',
             'pendingRequests',
             'approvedRequests',
-            ));
+            'sortBy',
+            'sortDir',
+            'activeTab'
+        ));
     }
 
 
