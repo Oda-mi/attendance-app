@@ -6,16 +6,17 @@
 **Dockerビルド手順**
 
 1. リポジトリをクローン
-``` bash
+```bash
 git clone git@github.com:Oda-mi/attendance-app.git
 ```
 2. docker-compose.yml があるディレクトリへ移動
-``` bash
+```bash
 cd attendance-app
 ```
 3. Docker Desktop を起動
+
 4. コンテナをビルドして起動
-``` bash
+```bash
 docker-compose up -d --build
 ```
 
@@ -23,35 +24,36 @@ docker-compose up -d --build
 **Laravel環境構築手順**
 
 ※ 本プロジェクトは PHP 8.1 を使用しています<br>
-※ PHP 8.2 以上では一部パッケージが対応しておらず、composer install でエラーが発生する可能性があります
+※ PHP 8.2 以上では `composer install` でエラーが発生する可能性があります
 
 ***Dockerを使用する場合***
 
 1. PHPコンテナに入る
-``` bash
+```bash
 docker-compose exec php bash
 ```
 2. 依存関係をインストール
-``` bash
+```bash
 composer install
 ```
 
 ***Dockerを使用しない場合***
-1. Laravel 本体が src 配下にあるため、src へ移動してください
-```
+1. Laravel 本体が `src` 配下にあるため、`src` へ移動してください
+```bash
 cd src
 ```
 2. 依存関係をインストール
-``` bash
+```bash
 composer install
 ```
+
 ***共通設定（Dockerあり/なし共通）***
-1. .env.example をコピーして .env ファイルを作成
-``` bash
+1. `.env.example` をコピーして `.env` ファイルを作成
+```bash
 cp .env.example .env
 ```
-1. .env に以下の環境変数を追加
-```text
+2. `.env` に以下の環境変数を追加
+```env
 DB_CONNECTION=mysql
 DB_HOST=mysql
 DB_PORT=3306
@@ -59,28 +61,28 @@ DB_DATABASE=laravel_db
 DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_pass
 ```
-1. アプリケーションキーを生成
-``` bash
+3. アプリケーションキーを生成
+```bash
 php artisan key:generate
 ```
-1. マイグレーションを実行
+4. マイグレーションを実行
 ```bash
 php artisan migrate
 ```
-1. シーディングを実行
+5. シーディングを実行
 ```bash
 php artisan db:seed
 ```
 
 ## ダミーユーザー情報（シーディング用）
-1. **管理ユーザー**
-- 名前: 管理者
-- メール: admin@example.com
-- パスワード: admin123
-2. **一般ユーザー**
-- 名前: テスト太郎
-- メール: test@example.com
-- パスワード: password123
+- **管理ユーザー**
+  - 名前: 管理者
+  - メール: admin@example.com
+  - パスワード: admin123
+- **一般ユーザー**
+  - 名前: テスト太郎
+  - メール: test@example.com
+  - パスワード: password123
 
 ※シーダー実行で自動的に作成されます
 
@@ -90,6 +92,8 @@ php artisan db:seed
 - 環境構築完了後、実装確認を行う際は以下の手順で手動起動してください
 ```bash
 docker-compose exec php bash
+```
+```bash
 php artisan serve --host=0.0.0.0 --port=8000
 ```
 - ブラウザで以下の URL にアクセスしてください
@@ -126,28 +130,38 @@ MAIL_FROM_NAME="${APP_NAME}"
 - テスト実行時には Factory により必要なダミーデータが自動的に生成されます
 
 
-### 1. テスト環境設定
+### テスト環境構築＆テスト実行手順（Docker）
 
-1. .env.testing ファイルを作成
+1. MySQL コンテナに入る
+```bash
+docker-compose exec mysql bash
+```
+2. MySQL接続
+```bash
+mysql -u root -p
+```
+> ***※ パスワードは docker-compose.yml の MYSQL_ROOT_PASSWORD を使用してください***<br>
+3. テスト用DB作成
+```bash
+CREATE DATABASE demo_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+4. MySQLコンテナから抜ける（`exit`は２回実行）
+```bash
+exit
+exit
+```
+5. PHPコンテナに入る
+```bash
+docker-compose exec php bash
+```
+
+6. コンテナ内で `.env.testing` ファイルを作成
 ```bash
 cp .env .env.testing
 ```
-2. テスト用DBの作成
-```
-docker-compose exec mysql bash
-```
-```
-mysql -u root -p
-```
-```
-CREATE DATABASE demo_test
-CHARACTER SET utf8mb4
-COLLATE utf8mb4_unicode_ci;
-```
-※ パスワードは docker-compose.yml の MYSQL_ROOT_PASSWORD を使用してください<br>
 
-3. .env.testing に以下の環境変数を設定
-```text
+7. `.env.testing` に以下の環境変数を設定
+```env
 DB_CONNECTION=mysql
 DB_HOST=mysql
 DB_PORT=3306
@@ -156,39 +170,34 @@ DB_USERNAME=root
 DB_PASSWORD=root
 ```
 
-4. アプリケーションキーを生成
+8. アプリケーションキーを生成
 ```bash
 php artisan key:generate --env=testing
 ```
-5. キャッシュをクリア
+9. キャッシュをクリア
 ```bash
 php artisan config:clear
 ```
-
-### 2. テスト実行手順
-1. PHPコンテナに入る
-```bash
-docker-compose exec php bash
-```
-2. マイグレーションとシーディングを実行
+10. マイグレーション実行
 ```bash
 php artisan migrate --env=testing
 ```
-※ マイグレーション実行時にエラーが発生する場合 <br>
-MySQL の文字コード設定が原因の可能性があります <br>
-その場合は、上記のように utf8mb4 / utf8mb4_unicode_ci を指定して <br>
+※ マイグレーション実行時にエラーが発生する場合<br>
+MySQL の文字コード設定が原因の可能性があります<br>
+その場合は、上記のように `utf8mb4 / utf8mb4_unicode_ci` を指定して<br>
 データベースを作成し直してください
 
-3. キャッシュをクリア
+11. キャッシュをクリア
 ```bash
 php artisan optimize:clear
 ```
-4. テストを実行
+
+12. テストを実行
 ```bash
 php artisan test
 ```
 
-### 3. テストファイル構成について
+### テストファイル構成について
 
 本アプリではテストを機能ごとにファイルに分けています
 
