@@ -108,8 +108,8 @@ MailHog を使用して開発環境でメール認証を確認します
 > 本プロジェクトでは MailHog v1.0.1 を使用しています<br>
 > 動作保証のため、以下のバージョンをダウンロードしてください<br>
 > [GitHubのリリースページ](https://github.com/mailhog/MailHog/releases/v1.0.1) から使用しているOSに適したバージョンをダウンロードしてください
-1. Docker を使用時は `docker-compose.yml` に定義済みです
-2. `.env` に以下の環境変数を追加
+2. Docker を使用時は `docker-compose.yml` に定義済みです
+3. `.env` に以下の環境変数を追加
 ```env
 MAIL_MAILER=smtp
 MAIL_HOST=mailhog
@@ -120,7 +120,7 @@ MAIL_ENCRYPTION=null
 MAIL_FROM_ADDRESS=test@email.com
 MAIL_FROM_NAME="${APP_NAME}"
 ```
-1. MailHog を起動後、以下で送信メールを確認可能
+4. MailHog を起動後、以下で送信メールを確認可能
    - http://localhost:8025
 
 
@@ -184,12 +184,10 @@ php artisan migrate --env=testing
 ```
 > ※ マイグレーション実行時にエラーが発生する場合、MySQL の文字コード設定が原因の可能性があります<br>
 その場合は、上記のように `utf8mb4 / utf8mb4_unicode_ci` を指定してデータベースを作成し直してください
-
 11. キャッシュをクリア
 ```bash
 php artisan optimize:clear
 ```
-
 12. テストを実行
 ```bash
 php artisan test
