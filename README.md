@@ -9,8 +9,12 @@
 ``` bash
 git clone git@github.com:Oda-mi/attendance-app.git
 ```
-2. Docker Desktop を起動
-3. コンテナをビルドして起動
+2. docker-compose.yml があるディレクトリへ移動
+``` bash
+cd attendance-app
+```
+3. Docker Desktop を起動
+4. コンテナをビルドして起動
 ``` bash
 docker-compose up -d --build
 ```
@@ -18,23 +22,35 @@ docker-compose up -d --build
 
 **Laravel環境構築手順**
 
+※ 本プロジェクトは PHP 8.1 を使用しています<br>
+※ PHP 8.2 以上では一部パッケージが対応しておらず、composer install でエラーが発生する可能性があります
+
+***Dockerを使用する場合***
+
 1. PHPコンテナに入る
 ``` bash
 docker-compose exec php bash
 ```
-2. Laravel 本体が src 配下にあるため、src へ移動
-```
-cd src
-```
-3. 依存関係をインストール
+2. 依存関係をインストール
 ``` bash
 composer install
 ```
-4. .env.example をコピーして .env ファイルを作成
+
+***Dockerを使用しない場合***
+1. Laravel 本体が src 配下にあるため、src へ移動してください
+```
+cd src
+```
+2. 依存関係をインストール
+``` bash
+composer install
+```
+***共通設定（Dockerあり/なし共通）***
+1. .env.example をコピーして .env ファイルを作成
 ``` bash
 cp .env.example .env
 ```
-5. .env に以下の環境変数を追加
+1. .env に以下の環境変数を追加
 ```text
 DB_CONNECTION=mysql
 DB_HOST=mysql
@@ -43,15 +59,15 @@ DB_DATABASE=laravel_db
 DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_pass
 ```
-6. アプリケーションキーを生成
+1. アプリケーションキーを生成
 ``` bash
 php artisan key:generate
 ```
-7. マイグレーションを実行
+1. マイグレーションを実行
 ```bash
 php artisan migrate
 ```
-8. シーディングを実行
+1. シーディングを実行
 ```bash
 php artisan db:seed
 ```
@@ -69,9 +85,13 @@ php artisan db:seed
 ※シーダー実行で自動的に作成されます
 
 
-## 開発用 Laravel サーバー自動起動について
-- Docker コンテナ起動時に php コンテナで自動的に Laravel 開発サーバー（php artisan serve）が立ち上がります
-- 手動で `php artisan serve` を実行する必要はありません
+## 開発用 Laravel サーバーの起動について
+- 本プロジェクトでは、Docker コンテナ起動時に Laravel 開発サーバーは自動起動されません
+- 環境構築完了後、実装確認を行う際は以下の手順で手動起動してください
+```bash
+docker-compose exec php bash
+php artisan serve --host=0.0.0.0 --port=8000
+```
 - ブラウザで以下の URL にアクセスしてください
   - http://localhost:8000/attendance
 
@@ -120,8 +140,11 @@ docker-compose exec mysql bash
 mysql -u root -p
 ```
 ```
-CREATE DATABASE demo_test;
+CREATE DATABASE demo_test
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
 ```
+※ パスワードは docker-compose.yml の MYSQL_ROOT_PASSWORD を使用してください<br>
 
 3. .env.testing に以下の環境変数を設定
 ```text
@@ -142,7 +165,6 @@ php artisan key:generate --env=testing
 php artisan config:clear
 ```
 
-
 ### 2. テスト実行手順
 1. PHPコンテナに入る
 ```bash
@@ -152,6 +174,11 @@ docker-compose exec php bash
 ```bash
 php artisan migrate --env=testing
 ```
+※ マイグレーション実行時にエラーが発生する場合 <br>
+MySQL の文字コード設定が原因の可能性があります <br>
+その場合は、上記のように utf8mb4 / utf8mb4_unicode_ci を指定して <br>
+データベースを作成し直してください
+
 3. キャッシュをクリア
 ```bash
 php artisan optimize:clear
@@ -180,7 +207,7 @@ php artisan test
 
 ## 使用技術（実行環境）
 - Laravel : 8.83.8
-- PHP : 8.4.10
+- PHP : 8.1
 - MySQL : 8.0
 
 ## テーブル仕様
