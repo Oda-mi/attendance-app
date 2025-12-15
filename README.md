@@ -182,10 +182,8 @@ php artisan config:clear
 ```bash
 php artisan migrate --env=testing
 ```
-※ マイグレーション実行時にエラーが発生する場合<br>
-MySQL の文字コード設定が原因の可能性があります<br>
-その場合は、上記のように `utf8mb4 / utf8mb4_unicode_ci` を指定して<br>
-データベースを作成し直してください
+※ マイグレーション実行時にエラーが発生する場合、MySQL の文字コード設定が原因の可能性があります<br>
+その場合は、上記のように `utf8mb4 / utf8mb4_unicode_ci` を指定してデータベースを作成し直してください
 
 11. キャッシュをクリア
 ```bash
