@@ -71,17 +71,19 @@ use Carbon\Carbon;
                             </div>
                             @endif
                         </div>
-                        <div class="attendance-form__error">
-                        @error('time')
-                            <span>{{ $message }}</span>
-                        @enderror
-                        @error('work_time_format')
-                            <span>{{ $message }}</span>
-                        @enderror
-                        @error('work_time')
-                            <span>{{ $message }}</span>
-                        @enderror
-                        </div>
+                        @if ($errors->has('time') || $errors->has('work_time_format') || $errors->has('work_time'))
+                            <div class="attendance-form__error">
+                                @error('time')
+                                    <span>{{ $message }}</span>
+                                @enderror
+                                @error('work_time_format')
+                                    <span>{{ $message }}</span>
+                                @enderror
+                                @error('work_time')
+                                    <span>{{ $message }}</span>
+                                @enderror
+                            </div>
+                        @endif
                     </td>
                 </tr>
                 @foreach($breaks as $index => $break)
@@ -109,23 +111,31 @@ use Carbon\Carbon;
                             </div>
                             @endif
                         </div>
-                        <div class="attendance-form__error">
-                            @error("break_start_format.$index")
-                                <span>{{ $message }}</span>
-                            @enderror
-                            @error("break_end_format.$index")
-                                <span>{{ $message }}</span>
-                            @enderror
-                            @error("break_start.$index")
-                                <span>{{ $message }}</span>
-                            @enderror
-                            @error("break_end.$index")
-                                <span>{{ $message }}</span>
-                            @enderror
-                            @error("break_start_end.$index")
-                                <span>{{ $message }}</span>
-                            @enderror
-                        </div>
+                        @if (
+                            $errors->has("break_start_format.$index") ||
+                            $errors->has("break_end_format.$index") ||
+                            $errors->has("break_start.$index") ||
+                            $errors->has("break_end.$index") ||
+                            $errors->has("break_start_end.$index")
+                        )
+                            <div class="attendance-form__error">
+                                @error("break_start_format.$index")
+                                    <span>{{ $message }}</span>
+                                @enderror
+                                @error("break_end_format.$index")
+                                    <span>{{ $message }}</span>
+                                @enderror
+                                @error("break_start.$index")
+                                    <span>{{ $message }}</span>
+                                @enderror
+                                @error("break_end.$index")
+                                    <span>{{ $message }}</span>
+                                @enderror
+                                @error("break_start_end.$index")
+                                    <span>{{ $message }}</span>
+                                @enderror
+                            </div>
+                        @endif
                     </td>
                 </tr>
                 @endforeach
@@ -146,23 +156,31 @@ use Carbon\Carbon;
                                 value="{{ old('break_end.' . $breaks->count()) }}"
                             >
                         </div>
-                        <div class="attendance-form__error">
-                            @error("break_start_format." . $breaks->count())
-                                <span>{{ $message }}</span>
-                            @enderror
-                            @error("break_end_format." . $breaks->count())
-                                <span>{{ $message }}</span>
-                            @enderror
-                            @error("break_start." . $breaks->count())
-                                <span>{{ $message }}</span>
-                            @enderror
-                            @error("break_end." . $breaks->count())
-                                <span>{{ $message }}</span>
-                            @enderror
-                            @error("break_start_end." . $breaks->count())
-                                <span>{{ $message }}</span>
-                            @enderror
-                        </div>
+                        @if (
+                            $errors->has("break_start_format." . $breaks->count()) ||
+                            $errors->has("break_end_format." . $breaks->count()) ||
+                            $errors->has("break_start." . $breaks->count()) ||
+                            $errors->has("break_end." . $breaks->count()) ||
+                            $errors->has("break_start_end." . $breaks->count())
+                        )
+                            <div class="attendance-form__error">
+                                @error("break_start_format." . $breaks->count())
+                                    <span>{{ $message }}</span>
+                                @enderror
+                                @error("break_end_format." . $breaks->count())
+                                    <span>{{ $message }}</span>
+                                @enderror
+                                @error("break_start." . $breaks->count())
+                                    <span>{{ $message }}</span>
+                                @enderror
+                                @error("break_end." . $breaks->count())
+                                    <span>{{ $message }}</span>
+                                @enderror
+                                @error("break_start_end." . $breaks->count())
+                                    <span>{{ $message }}</span>
+                                @enderror
+                            </div>
+                        @endif
                     </td>
                 </tr>
                 @endif
@@ -176,11 +194,13 @@ use Carbon\Carbon;
                             {!! nl2br(e($attendanceData->note)) !!}
                         </div>
                         @endif
-                        <div class="attendance-form__error">
-                        @error('note')
-                            <span>{{ $message }}</span>
-                        @enderror
-                        </div>
+                        @if ($errors->has('note'))
+                            <div class="attendance-form__error">
+                                @error('note')
+                                    <span>{{ $message }}</span>
+                                @enderror
+                            </div>
+                        @endif
                     </td>
                 </tr>
             </table>
