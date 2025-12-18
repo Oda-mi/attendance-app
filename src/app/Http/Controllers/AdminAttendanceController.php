@@ -295,7 +295,7 @@ class AdminAttendanceController extends Controller
             '勤務時間（合計）',
         ];
 
-        $csvFileName = "attendance_{$user->name}_{$year}-{$month}.csv";
+        $csvFileName = "勤務一覧_{$user->name}_{$year}-{$month}.csv";
 
         $handle = fopen('php://temp', 'r+');
 
@@ -313,27 +313,28 @@ class AdminAttendanceController extends Controller
 
             $csvDate = $dateString;
 
-            $start = $attendance?->start_time
-                ? Carbon::parse($attendance->start_time)->format('H:i')
-                : '';
+            $isAttendanceConfirmed = $attendance
+                && $attendance->start_time
+                && $attendance->end_time;
 
-            $end = $attendance?->end_time
-                ? Carbon::parse($attendance->end_time)->format('H:i')
-                : '';
+            if ($isAttendanceConfirmed) {
+                $start = Carbon::parse($attendance->start_time)->format('H:i');
+                $end   = Carbon::parse($attendance->end_time)->format('H:i');
 
-            if (!$attendance) {
-                $break = '';
-            } elseif (!$attendance->start_time || !$attendance->end_time) {
-                $break = '';
-            } elseif ($break = $attendance->breaks->count() === 0) {
-                $break = '00:00';
+                if ($attendance->breaks->count() === 0) {
+                    $break = '00:00';
+                } else {
+                    $break = gmdate('H:i', $attendance->breakTotal);
+                }
+
+                $work = gmdate('H:i', $attendance->workTotal);
+
             } else {
-                $break = gmdate('H:i', $attendance->breakTotal);
+                $start = '';
+                $end   = '';
+                $break = '';
+                $work  = '';
             }
-
-            $work = $attendance?->workTotal
-                ? gmdate('H:i', $attendance->workTotal)
-                : '';
 
             fputcsv($handle, [
                 $csvDate,
