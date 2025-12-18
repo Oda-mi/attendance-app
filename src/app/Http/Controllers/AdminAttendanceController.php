@@ -317,17 +317,30 @@ class AdminAttendanceController extends Controller
                 && $attendance->start_time
                 && $attendance->end_time;
 
+            $hasValidBreak = $attendance
+                && $attendance->breaks->count() > 0
+                && $attendance->breaks->every(function ($break) {
+                    return $break->start_time && $break->end_time;
+                });
+
             if ($isAttendanceConfirmed) {
+
                 $start = Carbon::parse($attendance->start_time)->format('H:i');
                 $end   = Carbon::parse($attendance->end_time)->format('H:i');
 
-                if ($attendance->breaks->count() === 0) {
-                    $break = '00:00';
-                } else {
-                    $break = gmdate('H:i', $attendance->breakTotal);
-                }
+                $break = $attendance->breaks->count() === 0
+                    ? '00:00'
+                    : gmdate('H:i', $attendance->breakTotal);
 
                 $work = gmdate('H:i', $attendance->workTotal);
+
+            } elseif ($attendance && $attendance->start_time && $hasValidBreak) {
+
+                $start = Carbon::parse($attendance->start_time)->format('H:i');
+                $end   = '';
+
+                $break = gmdate('H:i', $attendance->breakTotal);
+                $work  = '';
 
             } else {
                 $start = '';
