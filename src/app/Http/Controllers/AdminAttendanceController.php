@@ -313,34 +313,28 @@ class AdminAttendanceController extends Controller
 
             $csvDate = $dateString;
 
-            $isAttendanceConfirmed = $attendance
-                && $attendance->start_time
-                && $attendance->end_time;
+            $hasAttendance = $attendance !== null;
+            $hasStart      = $attendance?->start_time !== null;
+            $hasEnd        = $attendance?->end_time !== null;
+            $hasBreak      = $attendance && $attendance->breaks->count() > 0;
 
-            $hasValidBreak = $attendance
-                && $attendance->breaks->count() > 0
-                && $attendance->breaks->every(function ($break) {
-                    return $break->start_time && $break->end_time;
-                });
-
-            if ($isAttendanceConfirmed) {
+            if ($hasAttendance && $hasStart) {
 
                 $start = Carbon::parse($attendance->start_time)->format('H:i');
-                $end   = Carbon::parse($attendance->end_time)->format('H:i');
 
-                $break = $attendance->breaks->count() === 0
-                    ? '00:00'
-                    : gmdate('H:i', $attendance->breakTotal);
+                $end = $hasEnd
+                    ? Carbon::parse($attendance->end_time)->format('H:i')
+                    : '';
 
-                $work = gmdate('H:i', $attendance->workTotal);
+                if ($hasBreak) {
+                    $break = gmdate('H:i', $attendance->breakTotal);
+                } else {
+                    $break = ($hasStart && $hasEnd) ? '00:00' : '';
+                }
 
-            } elseif ($attendance && $attendance->start_time && $hasValidBreak) {
-
-                $start = Carbon::parse($attendance->start_time)->format('H:i');
-                $end   = '';
-
-                $break = gmdate('H:i', $attendance->breakTotal);
-                $work  = '';
+                $work = ($hasStart && $hasEnd)
+                    ? gmdate('H:i', $attendance->workTotal)
+                    : '';
 
             } else {
                 $start = '';
@@ -348,7 +342,6 @@ class AdminAttendanceController extends Controller
                 $break = '';
                 $work  = '';
             }
-
             fputcsv($handle, [
                 $csvDate,
                 $start,
