@@ -316,7 +316,7 @@ class AdminAttendanceController extends Controller
             $hasAttendance = $attendance !== null;
             $hasStart      = $attendance?->start_time !== null;
             $hasEnd        = $attendance?->end_time !== null;
-            $hasBreak      = $attendance && $attendance->breaks->count() > 0;
+            $hasBreak      = $attendance && $attendance->breaks->whereNotNull('end_time')->count() > 0;
 
             if ($hasAttendance && $hasStart) {
 
