@@ -122,8 +122,6 @@ class StampCorrectionRequestController extends Controller
         });
 
         return redirect()->route('stamp_correction_request.showApproveForm', ['attendance_correct_request_id' => $requestData->id]);
-
     }
-
 
 }

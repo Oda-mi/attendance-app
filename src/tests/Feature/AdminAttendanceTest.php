@@ -405,7 +405,7 @@ class AdminAttendanceTest extends TestCase
         $responsePrevMonthPage->assertSee(Carbon::parse($attendanceDataPrevMonth->end_time)->format('H:i'));
     }
 
-        /** @test */
+    /** @test */
     public function 管理者：「翌月」を押下した時に表示月の翌月の情報が表示される()
     {
         $admin = User::factory()->create([

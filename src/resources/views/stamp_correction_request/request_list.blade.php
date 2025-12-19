@@ -150,7 +150,6 @@ use Carbon\Carbon;
         const tabContents = document.querySelectorAll('.tab-content');
         const activeTab = "{{ $activeTab }}";
 
-         // タブのアクティブ切り替え
         tabButtons.forEach(tab => {
             if (tab.dataset.target === activeTab) {
                 tab.classList.add('nav__tab--active');
@@ -159,23 +158,19 @@ use Carbon\Carbon;
             }
         });
 
-        // コンテンツの表示切り替え
         tabContents.forEach(content => {
             content.style.display = (content.id === activeTab) ? 'block' : 'none';
         });
 
-        // タブをクリックした時のイベントセット
         tabButtons.forEach(tabButton => {
             tabButton.addEventListener('click', (clickEvent) => {
                 clickEvent.preventDefault();
 
                 const targetContentId = tabButton.dataset.target;
 
-                // タブのアクティブ切り替え
                 tabButtons.forEach(button => button.classList.remove('nav__tab--active'));
                 tabButton.classList.add('nav__tab--active');
 
-                // コンテンツの表示切り替え
                 tabContents.forEach(content => {
                     content.style.display = (content.id === targetContentId) ? 'block' : 'none';
                 });

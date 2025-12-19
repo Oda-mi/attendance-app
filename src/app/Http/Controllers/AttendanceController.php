@@ -382,7 +382,6 @@ class AttendanceController extends Controller
         });
 
         return redirect()->route('attendance.detail', ['id' => $attendance->id]);
-
     }
 
 }
