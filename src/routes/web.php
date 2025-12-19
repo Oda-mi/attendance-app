@@ -74,14 +74,15 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/admin/login', function () {
     return view('admin.auth.admin_login');
-})->name('admin.login');
+})
+->name('admin.login.form');
 
 Route::post('/admin/login',
     [AuthenticatedSessionController::class, 'store'])
     ->name('admin.login');
 
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'check.admin'])->group(function () {
 
     Route::get('/admin/attendance/list',
         [AdminAttendanceController::class, 'dailyList'])
@@ -111,6 +112,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/export',
         [AdminAttendanceController::class, 'export'])
         ->name('admin.attendance.export');
+
 
     Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}',
         [StampCorrectionRequestController::class, 'showApproveForm'])
