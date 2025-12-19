@@ -24,7 +24,7 @@ docker-compose up -d --build
 ### Laravel環境構築手順
 
 ※ 本プロジェクトは PHP 8.1 を使用しています<br>
-※ PHP 8.2 以上では `composer install` でエラーが発生する可能性があります
+※ PHP 8.2 以上では依存関係の都合により `composer install` でエラーが発生する可能性があります
 
 ***Dockerを使用する場合***
 
@@ -150,6 +150,11 @@ mysql -u root -p
 ```bash
 CREATE DATABASE demo_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
+> ※ テスト用DB作成時に文字コード・照合順序を指定しています<br>
+> 環境によっては `CREATE DATABASE demo_test;` のみでは<br>
+> マイグレーション実行時に文字コード不一致エラーが発生するため、<br>
+> 本手順では `utf8mb4 / utf8mb4_unicode_ci` を明示しています
+
 4. MySQLコンテナから抜ける（`exit`は２回実行）
 ```bash
 exit
@@ -301,8 +306,9 @@ php artisan test
   - POST /admin/export … 勤怠データをCSV形式で出力
 
 
+
 ## 追加実装機能
-> ※本機能はコーチとの面談で追加機能提案として挙がり、追加実装したものです
+※本機能はコーチとの面談で追加機能提案として挙がり、追加実装したものです
 
 **1. 勤怠データの統合表示（通常勤怠＋申請中［承認待ち］勤怠）**<br>
 以下の３画面で本機能を実装しています
@@ -391,5 +397,5 @@ php artisan test
 親テーブルである attendances テーブルのデータのみを出力しています<br>
 そのため、画面では申請内容が表示されていても、<br>
 承認前の修正申請内容はCSVには反映されません<br>
-これは、承認前の申請データを正式な勤怠情報として扱わない仕様であるためです<br>
+これは、承認前の申請データを正式な勤怠情報として扱わない運用を想定しているためです
 
